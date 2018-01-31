@@ -23,6 +23,7 @@ ind=indices(sets)
 x <- Var(name='x', sets=c(I, TP, set3))
 y <- Var(name='y', sets=list())
 
+
 constr <- Constraint(
   name = "character",
   sets = "list",

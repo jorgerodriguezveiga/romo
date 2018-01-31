@@ -10,7 +10,11 @@ Var <- setClass(
     name = "character",
     sets = "list",
     start_position = "numeric",
+<<<<<<< HEAD
     position = "arrayORnumeric",
+=======
+    position = "array",
+>>>>>>> 9b2e88a10ca2f0b7afd3bec3f27de03e4e32c3db
     value = "arrayORnumeric",
     description = "character"
   ),
@@ -36,7 +40,6 @@ setMethod(
   "initialize",
   "Var",
   function(.Object, name, sets=list(), start_position, position, value, description){
-    
     # Name
     .Object@name = name
     
