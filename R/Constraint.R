@@ -1,12 +1,32 @@
 
-Constraint <- function(sets, expression(expr)){
-  eval(expression(expr), list(j=1))
-}
+#Constraint <- function(sets, expression(expr)){
+#  eval(expression(expr), list(j=1))
+#}
 
 
 
 # Constraint ------------------------------------------------------------------
-Constraint <- function(name, sets, expr, start_position=1, description=""){
+#' Function to build constraints.
+#'
+#' @param name constraint name.
+#' @param sets set to build the collection of constraints.
+#' @param expr mathematical expression to build the constraints.
+#' @param start_position starting point to enumerate the set of constraints.
+#' @param description constraints description.
+#'
+#' @return Object of ConstraintClass or ConstraintElementClass class .
+#' @export Constraint
+#' 
+#' @include ConstraintElement.R
+#' 
+#' @examples 
+#' D <- Var("D")
+#' Constraint("Demand", D <= 2, description = "max demand.")
+Constraint <- function(name, expr, sets=list(), start_position=1, 
+                       description=""){
+  
+  sets <- ListSets(sets)
+  
   if(length(sets)==0){
     return(ConstraintElement(name, expr, position=start_position, 
                              state="active", description=description))
@@ -33,17 +53,30 @@ Constraint <- function(name, sets, expr, start_position=1, description=""){
                                          description=description)
     }
     
-    return(.Var(name=name, sets=sets, position=position, constraint=constraint, 
-                description=description))
+    return(ConstraintClass(name=name, sets=sets, position=position, 
+                           constraint=constraint, description=description))
   }
 }
 # --------------------------------------------------------------------------- #
 
 
-# .Constraint -----------------------------------------------------------------
-.Constraint <- setClass(
+# Constraint -----------------------------------------------------------------
+#' Constraint class.
+#'
+#' @slot name character. 
+#' @slot sets list. 
+#' @slot position arrayORnumeric. 
+#' @slot constraint list. 
+#' @slot description character. 
+#'
+#' @include NewClasses.R
+#' @return Object of ConstraintClass class.
+#' @export
+#'
+#' @examples 
+ConstraintClass <- setClass(
   # Class name
-  ".Constraint",
+  "ConstraintClass",
   
   # Define the slots
   representation = list(
@@ -52,15 +85,6 @@ Constraint <- function(name, sets, expr, start_position=1, description=""){
     position = "arrayORnumeric",
     constraint = "list",
     description = "character"
-  ),
-  
-  # Make a function that can test to see if the data is consistent.
-  # This is not called if you have an initialize function defined!
-  validity=function(object){
-    if(length(object@name)==0){
-      return("Argument 'name' is required.")
-    }
-    return(TRUE)
-  }
+  )
 )
 # --------------------------------------------------------------------------- #

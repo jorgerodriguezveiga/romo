@@ -1,0 +1,27 @@
+Package: romo
+Type: Package
+Title: R Optimization Modeling.
+Version: 0.0.1
+Author: Jorge Rodriguez-Veiga
+Maintainer: Jorge Rodriguez-Veiga <jorge.rodriguez.veiga@gmail.com>
+Description: Romo is a R-based open-source software package taht supports a dicerse set of optimization capabilities for formulation, solvingm and analyzing linear optimization models. Romo supports the following problem types: Linear programming. Mixed-Integer linear programming.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports:
+    lpSolveAPI
+Collate: 
+    'NewClasses.R'
+    'ConstraintElement.R'
+    'Constraint.R'
+    'VarElement.R'
+    'VarExpression.R'
+    'ConstraintExpression.R'
+    'Set.R'
+    'Iterator.R'
+    'ListSets.R'
+    'Param.R'
+    'ParamElement.R'
+    'Var.R'
+    'model.R'

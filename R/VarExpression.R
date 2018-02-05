@@ -1,18 +1,36 @@
 
 # VarExpression ---------------------------------------------------------------
+#' Variable expression.
+#'
+#' @param independent independent term of the variable expression.
+#' @param variables variables coefficients of the variable expression.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 VarExpression <- function(independent=0, variables=c(NA)){
   variables[is.na(variables)] <- 0
   return(
-    .VarExpression(independent=independent, variables=variables)
+    VarExpressionClass(independent=independent, variables=variables)
   )
 }
 # --------------------------------------------------------------------------- #
 
 
-# .VarExpression --------------------------------------------------------------
-.VarExpression <- setClass(
+# VarExpressionClass --------------------------------------------------------------
+#' Variable expression class.
+#'
+#' @slot independent numeric. 
+#' @slot variables numeric. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+VarExpressionClass <- setClass(
   # Class name
-  ".VarExpression",
+  "VarExpressionClass",
   
   # Define the slots
   representation = list(
@@ -30,7 +48,7 @@ VarExpression <- function(independent=0, variables=c(NA)){
 # + ---------------------------------------------------------------------------
 setMethod(
   "+", 
-  signature(e1 = ".VarExpression", e2 = ".VarExpression"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     independent = e1@independent + e2@independent
     
@@ -47,7 +65,7 @@ setMethod(
 
 setMethod(
   "+", 
-  signature(e1 = ".VarExpression", e2 = ".VarElement"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
   function(e1, e2){
     e1 + 1*e2
   }
@@ -55,7 +73,7 @@ setMethod(
 
 setMethod(
   "+", 
-  signature(e1 = ".VarElement", e2 = ".VarExpression"), 
+  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     e2+e1
   }
@@ -63,7 +81,7 @@ setMethod(
 
 setMethod(
   "+", 
-  signature(e1 = ".VarExpression", e2 = "numeric"), 
+  signature(e1 = "VarExpressionClass", e2 = "numeric"), 
   function(e1, e2){
     VarExpression(independent=e2, variables=0) + e1 
   }
@@ -71,7 +89,7 @@ setMethod(
 
 setMethod(
   "+", 
-  signature(e1 = "numeric", e2 = ".VarExpression"), 
+  signature(e1 = "numeric", e2 = "VarExpressionClass"), 
   function(e1, e2){
     e2+e1
   }
@@ -82,7 +100,7 @@ setMethod(
 # - ---------------------------------------------------------------------------
 setMethod(
   "-", 
-  signature(e1 = ".VarExpression", e2 = ".VarExpression"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     e1 + (-e2)
   }
@@ -90,7 +108,7 @@ setMethod(
 
 setMethod(
   "-", 
-  signature(e1 = ".VarElement", e2 = ".VarExpression"), 
+  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     e1 + (-e2)
   }
@@ -98,7 +116,7 @@ setMethod(
 
 setMethod(
   "-", 
-  signature(e1 = ".VarExpression", e2 = ".VarElement"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
   function(e1, e2){
     e1 + (-e2)
   }
@@ -106,7 +124,7 @@ setMethod(
 
 setMethod(
   "-", 
-  signature(e1 = "numeric", e2 = ".VarExpression"), 
+  signature(e1 = "numeric", e2 = "VarExpressionClass"), 
   function(e1, e2){
     e1 + VarExpression(independent= - e2@independent, variables= - e2@variables)
   }
@@ -114,7 +132,7 @@ setMethod(
 
 setMethod(
   "-", 
-  signature(e1 = ".VarExpression", e2 = "numeric"), 
+  signature(e1 = "VarExpressionClass", e2 = "numeric"), 
   function(e1, e2){
     e1 + (-e2)
   }
@@ -122,7 +140,7 @@ setMethod(
 
 setMethod(
   "-", 
-  signature(e1 = ".VarExpression"), 
+  signature(e1 = "VarExpressionClass"), 
   function(e1){
     0 - e1
   }
@@ -133,7 +151,7 @@ setMethod(
 # * ---------------------------------------------------------------------------
 setMethod(
   "*", 
-  signature(e1 = "numeric", e2 = ".VarExpression"), 
+  signature(e1 = "numeric", e2 = "VarExpressionClass"), 
   function(e1, e2){
     VarExpression(independent=e1*e2@independent, variables=e1*e2@variables)
   }
@@ -141,7 +159,7 @@ setMethod(
 
 setMethod(
   "*", 
-  signature(e1 = ".VarExpression", e2 = "numeric"), 
+  signature(e1 = "VarExpressionClass", e2 = "numeric"), 
   function(e1, e2){
     e2*e1
   }
@@ -152,7 +170,7 @@ setMethod(
 # / ---------------------------------------------------------------------------
 setMethod(
   "/", 
-  signature(e1 = ".VarExpression", e2 = "numeric"), 
+  signature(e1 = "VarExpressionClass", e2 = "numeric"), 
   function(e1, e2){
     (1/e2)*e1
   }

@@ -1,24 +1,50 @@
 
 # ConstraintElement -----------------------------------------------------------
+#' Function to build a constraint element.
+#'
+#' @param name constraint name.
+#' @param expr constraint expression.
+#' @param position constraint position.
+#' @param state constraint state. Possibilities c("active", "deactive"?).
+#' @param description constraint description.
+#'
+#' @return object of ConstraintElementClass class.
+#' @export
+#'
+#' @examples 
+#' D <- Var("D")
+#' ConstraintElement("Demand", D <= 2, description = "Max demand.")
 ConstraintElement <- function(name, expr, position=1, state="active", 
                               description = ""){
   return(
-    .ConstraintElement(name=name, position=position, 
-                       lhs = expr@lhs,
-                       sense = expr@sense,
-                       rhs = expr@rhs,
-                       state = state,
-                       description = description
-                       )
+    ConstraintElementClass(name=name, position=position, 
+                           lhs = expr@lhs,
+                           sense = expr@sense,
+                           rhs = expr@rhs,
+                           state = state,
+                           description = description
+                           )
   )
 }
 # --------------------------------------------------------------------------- #
 
 
-# .ConstraintElement ----------------------------------------------------------
-.ConstraintElement <- setClass(
+# ConstraintElementClass ------------------------------------------------------
+#' Constraint element class.
+#'
+#' @slot name character. 
+#' @slot position numeric. 
+#' @slot lhs numeric. 
+#' @slot sense character. 
+#' @slot rhs numeric. 
+#' @slot state character. 
+#' @slot description character. 
+#'
+#' @return object of the ConstraintElementClass class.
+#' @export
+ConstraintElementClass <- setClass(
   # Class name
-  ".ConstraintElement",
+  "ConstraintElementClass",
   
   # Define the slots
   representation = list(
@@ -34,8 +60,8 @@ ConstraintElement <- function(name, expr, position=1, state="active",
   # Make a function that can test to see if the data is consistent.
   # This is not called if you have an initialize function defined!
   validity=function(object){
-    if(length(object@name)==0){
-      return("Argument 'name' is required.")
+    if(!(object@state %in% c("active", "deactive"))){
+      return("'state' value not in c('active', 'deactive').")
     }
     return(TRUE)
   }

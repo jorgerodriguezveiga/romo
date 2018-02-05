@@ -9,17 +9,17 @@ VarElement <- function(name, position=1, value=NaN, lb=-Inf, ub=Inf,
   names(ub) <- name
   names(state) <- name
   return(
-    .VarElement(name=name, position=position, value=value, lb=lb, ub=ub,
-                state=state, type=type, description=description)
+    VarElementClass(name=name, position=position, value=value, lb=lb, ub=ub,
+                    state=state, type=type, description=description)
   )
 }
 # --------------------------------------------------------------------------- #
 
 
-# .VarElement -----------------------------------------------------------------
-.VarElement <- setClass(
+# VarElementClass -----------------------------------------------------------------
+VarElementClass <- setClass(
   # Class name
-  ".VarElement",
+  "VarElementClass",
   
   # Define the slots
   representation = list(
@@ -59,7 +59,7 @@ VarElement <- function(name, position=1, value=NaN, lb=-Inf, ub=Inf,
 # show ------------------------------------------------------------------------
 setMethod(
   "show", 
-  ".VarElement",
+  "VarElementClass",
   function(object){
     print(object@value)
   }
@@ -74,7 +74,7 @@ setMethod(
 # + ---------------------------------------------------------------------------
 setMethod(
   "+", 
-  signature(e1 = "numeric", e2 = ".VarElement"), 
+  signature(e1 = "numeric", e2 = "VarElementClass"), 
   function(e1, e2){
     variables=numeric(e2@position)
     variables[e2@position] = 1
@@ -84,7 +84,7 @@ setMethod(
 
 setMethod(
   "+", 
-  signature(e1 = ".VarElement", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "numeric"), 
   function(e1, e2){
     e2 + e1
   }
@@ -92,7 +92,7 @@ setMethod(
 
 setMethod(
   "+", 
-  signature(e1 = ".VarElement", e2 = ".VarElement"), 
+  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
   function(e1, e2){
     variables=numeric(max(e1@position, e2@position))
     
@@ -107,7 +107,7 @@ setMethod(
 # - ---------------------------------------------------------------------------
 setMethod(
   "-",
-  signature(e1 = ".VarElement", e2 = ".VarElement"), 
+  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
   function(e1, e2){
     e1 + (-e2)
   }
@@ -115,7 +115,7 @@ setMethod(
 
 setMethod(
   "-",
-  signature(e1 = ".VarElement", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "numeric"), 
   function(e1, e2){
     e1 + (-e2)
   }
@@ -123,7 +123,7 @@ setMethod(
 
 setMethod(
   "-",
-  signature(e1 = "numeric", e2 = ".VarElement"), 
+  signature(e1 = "numeric", e2 = "VarElementClass"), 
   function(e1, e2){
     variables=numeric(e2@position)
     variables[e2@position] = - 1
@@ -133,7 +133,7 @@ setMethod(
 
 setMethod(
   "-", 
-  signature(e1 = ".VarElement"), 
+  signature(e1 = "VarElementClass"), 
   function(e1){
     0 - e1
   }
@@ -144,7 +144,7 @@ setMethod(
 # * ---------------------------------------------------------------------------
 setMethod(
   "*", 
-  signature(e1 = "numeric", e2 = ".VarElement"), 
+  signature(e1 = "numeric", e2 = "VarElementClass"), 
   function(e1, e2){
     variables=numeric(e2@position)
     variables[e2@position] = e1
@@ -154,7 +154,7 @@ setMethod(
 
 setMethod(
   "*", 
-  signature(e1 = ".VarElement", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "numeric"), 
   function(e1, e2){
     e2*e1
   }
@@ -165,7 +165,7 @@ setMethod(
 # / ---------------------------------------------------------------------------
 setMethod(
   "/", 
-  signature(e1 = ".VarElement", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "numeric"), 
   function(e1, e2){
     (1/e2)*e1
   }

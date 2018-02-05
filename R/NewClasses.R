@@ -1,5 +1,11 @@
 
 # arrayORnumeric --------------------------------------------------------------
+#' @title Array and numeric class.
+#' 
+#' @description Union of array and numeric classes.
+#'  
+#' @exportClass arrayORnumeric
+#' 
 setClassUnion(
   "arrayORnumeric", 
   c("array", "numeric")
@@ -8,6 +14,12 @@ setClassUnion(
 
 
 # arrayORcharacter ------------------------------------------------------------
+#' @title Array and character class.
+#' 
+#' @description Union of array and character classes.
+#'  
+#' @export
+#' 
 setClassUnion(
   "arrayORcharacter", 
   c("array", "character")
@@ -16,17 +28,15 @@ setClassUnion(
 
 
 # characterORnumeric ----------------------------------------------------------
+#' @title Character and numeric class.
+#' 
+#' @description Union of character and numeric classes.
+#'  
+#' @export
+#' 
 setClassUnion(
   "characterORnumeric", 
   c("character", "numeric")
-)
-# --------------------------------------------------------------------------- #
-
-
-# ParamORVar ------------------------------------------------------------------
-setClassUnion(
-  "ParamORVar", 
-  c("Param", "Var")
 )
 # --------------------------------------------------------------------------- #
 

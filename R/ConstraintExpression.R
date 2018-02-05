@@ -1,15 +1,35 @@
 
 # ConstraintExpression --------------------------------------------------------
+#' Function to build a constraint expression.
+#'
+#' @param lhs left hand side.
+#' @param sense sense. Possibilities c("<=", ">=", "==").
+#' @param rhs right hand side.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ConstraintExpression <- function(lhs, sense, rhs){
-  return(.ConstraintExpression(lhs = lhs, sense = sense, rhs = rhs))
+  return(ConstraintExpressionClass(lhs = lhs, sense = sense, rhs = rhs))
 }
 # --------------------------------------------------------------------------- #
 
 
-# .ConstraintExpression -------------------------------------------------------
-.ConstraintExpression <- setClass(
+# ConstraintExpressionClass ---------------------------------------------------
+#' Title
+#'
+#' @slot lhs numeric. 
+#' @slot sense character. 
+#' @slot rhs numeric. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ConstraintExpressionClass <- setClass(
   # Class name
-  ".ConstraintExpression",
+  "ConstraintExpressionClass",
   
   # Define the slots
   representation = list(
@@ -32,9 +52,19 @@ ConstraintExpression <- function(lhs, sense, rhs){
 # =============================================================================
 
 # >= --------------------------------------------------------------------------
+#' Great or equal method to compare two variable expressions.
+#'
+#' @param e1 VarExpressionClass.
+#' @param e2 VarExpressionClass.
+#'
+#' @include VarExpression.R
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   ">=", 
-  signature(e1 = ".VarExpression", e2 = ".VarExpression"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     expr <- e1 - e2
     ConstraintExpression(lhs = expr@variables, 
@@ -43,9 +73,20 @@ setMethod(
   }
 )
 
+#' Great or equal method to compare variable expressions and variable element.
+#'
+#' @param e1 VarExpressionClass. 
+#' @param e2 VarElementClass. 
+#'
+#' @include VarExpression.R
+#' @include VarElement.R
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   ">=", 
-  signature(e1 = ".VarExpression", e2 = ".VarElement"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
   function(e1, e2){
     e1 >= 1*e2
   }
@@ -53,7 +94,7 @@ setMethod(
 
 setMethod(
   ">=", 
-  signature(e1 = ".VarElement", e2 = ".VarExpression"), 
+  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     1*e1 >= e2
   }
@@ -61,7 +102,7 @@ setMethod(
 
 setMethod(
   ">=", 
-  signature(e1 = ".VarExpression", e2 = "numeric"), 
+  signature(e1 = "VarExpressionClass", e2 = "numeric"), 
   function(e1, e2){
     e1 >= VarExpression() + e2
   }
@@ -70,7 +111,7 @@ setMethod(
 
 setMethod(
   ">=", 
-  signature(e1 = "numeric", e2 = ".VarExpression"), 
+  signature(e1 = "numeric", e2 = "VarExpressionClass"), 
   function(e1, e2){
     VarExpression() + e1 >= e2
   }
@@ -78,7 +119,7 @@ setMethod(
 
 setMethod(
   ">=", 
-  signature(e1 = ".VarElement", e2 = ".VarElement"), 
+  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
   function(e1, e2){
     VarExpression() + e2 >= VarExpression() + e1
   }
@@ -86,7 +127,7 @@ setMethod(
 
 setMethod(
   ">=", 
-  signature(e1 = ".VarElement", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "numeric"), 
   function(e1, e2){
     VarExpression() + e1 >= VarExpression() + e2
   }
@@ -94,7 +135,7 @@ setMethod(
 
 setMethod(
   ">=", 
-  signature(e1 = "numeric", e2 = ".VarElement"), 
+  signature(e1 = "numeric", e2 = "VarElementClass"), 
   function(e1, e2){
     VarExpression() + e1 >= VarExpression() + e2
   }
@@ -105,7 +146,7 @@ setMethod(
 # <= --------------------------------------------------------------------------
 setMethod(
   "<=", 
-  signature(e1 = ".VarExpression", e2 = ".VarExpression"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     expr <- e1 - e2
     ConstraintExpression(lhs = expr@variables, 
@@ -116,7 +157,7 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = ".VarExpression", e2 = ".VarElement"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
   function(e1, e2){
     e1 <= 1*e2
   }
@@ -124,7 +165,7 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = ".VarElement", e2 = ".VarExpression"), 
+  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     1*e1 <= e2
   }
@@ -132,7 +173,7 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = ".VarExpression", e2 = "numeric"), 
+  signature(e1 = "VarExpressionClass", e2 = "numeric"), 
   function(e1, e2){
     e1 <= VarExpression() + e2
   }
@@ -141,7 +182,7 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = "numeric", e2 = ".VarExpression"), 
+  signature(e1 = "numeric", e2 = "VarExpressionClass"), 
   function(e1, e2){
     VarExpression() + e1 <= e2
   }
@@ -149,7 +190,7 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = ".VarElement", e2 = ".VarElement"), 
+  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
   function(e1, e2){
     VarExpression() + e2 <= VarExpression() + e1
   }
@@ -157,7 +198,7 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = ".VarElement", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "numeric"), 
   function(e1, e2){
     VarExpression() + e1 <= VarExpression() + e2
   }
@@ -165,7 +206,7 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = "numeric", e2 = ".VarElement"), 
+  signature(e1 = "numeric", e2 = "VarElementClass"), 
   function(e1, e2){
     VarExpression() + e1 <= VarExpression() + e2
   }
@@ -176,7 +217,7 @@ setMethod(
 # == --------------------------------------------------------------------------
 setMethod(
   "==", 
-  signature(e1 = ".VarExpression", e2 = ".VarExpression"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     expr <- e1 - e2
     ConstraintExpression(lhs = expr@variables, 
@@ -187,7 +228,7 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = ".VarExpression", e2 = ".VarElement"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
   function(e1, e2){
     e1 == 1*e2
   }
@@ -195,7 +236,7 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = ".VarElement", e2 = ".VarExpression"), 
+  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     1*e1 == e2
   }
@@ -203,7 +244,7 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = ".VarExpression", e2 = "numeric"), 
+  signature(e1 = "VarExpressionClass", e2 = "numeric"), 
   function(e1, e2){
     e1 == VarExpression() + e2
   }
@@ -212,7 +253,7 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = "numeric", e2 = ".VarExpression"), 
+  signature(e1 = "numeric", e2 = "VarExpressionClass"), 
   function(e1, e2){
     VarExpression() + e1 == e2
   }
@@ -220,7 +261,7 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = ".VarElement", e2 = ".VarElement"), 
+  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
   function(e1, e2){
     VarExpression() + e2 == VarExpression() + e1
   }
@@ -228,7 +269,7 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = ".VarElement", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "numeric"), 
   function(e1, e2){
     VarExpression() + e1 == VarExpression() + e2
   }
@@ -236,7 +277,7 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = "numeric", e2 = ".VarElement"), 
+  signature(e1 = "numeric", e2 = "VarElementClass"), 
   function(e1, e2){
     VarExpression() + e1 == VarExpression() + e2
   }

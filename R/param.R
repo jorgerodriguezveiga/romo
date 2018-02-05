@@ -1,15 +1,71 @@
-
-
 # Param -----------------------------------------------------------------------
-Param <- setClass(
+#' Function to create a parameter.
+#'
+#' @param name parameter name.
+#' @param value parameter value.
+#' @param sets set to build the collection of parameters.
+#' @param description parameter description.
+#'
+#' @return Object of ParamClass class.
+#' @export
+#'
+#' @examples
+Param <- function(name, value, sets=list(), description=""){
+  
+  sets <- ListSets(sets)
+  
+  if(length(sets)==0){
+    return(ParamElement(name=name, value=value, description=description))
+  }else{
+    ind = indices(sets)
+    
+    parameter <- list()
+    position = array(dim=dimension(sets), dimnames=dimensionnames(sets))
+    for(i in rownames(ind)){
+      # Positions
+      pos <- as.double(i)
+      sets_elem <- as.matrix(ind[i,])
+      position[sets_elem] = pos
+      
+      # Variables
+      # ---------
+      # Name
+      ele_name <- paste(name, "[", paste(sets_elem, collapse=", "), "]", 
+                        sep = "")
+      
+      parameter[[pos]] <- ParamElement(name=ele_name, value=value[sets_elem], 
+                                       description=description)
+    }
+    return(ParamClass(name=name, sets=sets, position=position, 
+                      parameter=parameter, description=description))
+  }
+}
+# --------------------------------------------------------------------------- #
+
+
+# ParamClass ----------------------------------------------------------------------
+#' Parameter class
+#'
+#' @slot name character. 
+#' @slot sets list. 
+#' @slot value arrayORnumeric. 
+#' @slot description character. 
+#'
+#' @include NewClasses.R
+#' @return
+#' @export
+#'
+#' @examples
+ParamClass <- setClass(
   # Class name
-  "Param",
+  "ParamClass",
   
   # Define the slots
   representation = list(
     name = "character",
     sets = "list",
-    value = "arrayORnumeric",
+    position = "arrayORnumeric",
+    parameter = "list",
     description = "character"
   ),
   
@@ -29,9 +85,21 @@ Param <- setClass(
 # [] --------------------------------------------------------------------------
 setMethod(
   "[", 
-  "Param",
-  function(x, i, j, ...){
-    x@value[i, j, ...]
+  c("ParamClass", "ANY", "ANY"),
+  function(x, i, j, ..., drop=TRUE){
+    index <- matrix(c(i, j, ...), nrow=1)
+    pos <- x@position[index]
+    x@parameter[[pos]]
+  }
+)
+
+setMethod(
+  "[", 
+  c("ParamClass", "ANY", "missing"),
+  function(x, i, j, ..., drop=TRUE){
+    index <- matrix(c(i, ...), nrow=1)
+    pos <- x@position[index]
+    x@parameter[[pos]]
   }
 )
 # --------------------------------------------------------------------------- #

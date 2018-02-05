@@ -1,8 +1,26 @@
 
 
 # Var -------------------------------------------------------------------------
+#' Function to create variables.
+#'
+#' @param name variable name.
+#' @param sets set to build the collection of variables.
+#' @param start_position starting point to enumerate the set of variables.
+#' @param value variable value.
+#' @param lb variable lower bound.
+#' @param ub variable upper bound.
+#' @param state variable state.
+#' @param type variable type.
+#' @param description variable description.
+#'
+#' @return
+#' @export Var
+#'
+#' @examples
 Var <- function(name, sets=list(), start_position=1, value=NaN, lb=-Inf, ub=Inf, 
                 state="unfix", type="continuous", description=""){
+  
+  sets <- ListSets(sets)
   
   if(length(sets)==0){
     return(VarElement(name=name, position=start_position, value=value, lb=lb, 
@@ -29,7 +47,7 @@ Var <- function(name, sets=list(), start_position=1, value=NaN, lb=-Inf, ub=Inf,
                                     description=description)
     }
     
-    return(.Var(name=name, sets=sets, position=position, variable=variable, 
+    return(VarClass(name=name, sets=sets, position=position, variable=variable, 
                 description=description))
   }
 }
@@ -37,10 +55,23 @@ Var <- function(name, sets=list(), start_position=1, value=NaN, lb=-Inf, ub=Inf,
 # --------------------------------------------------------------------------- #
 
   
-# .Var ------------------------------------------------------------------------
-.Var <- setClass(
+# VarClass ------------------------------------------------------------------------
+#' Variable class.
+#'
+#' @slot name character. 
+#' @slot sets list. 
+#' @slot position arrayORnumeric. 
+#' @slot variable list. 
+#' @slot description character. 
+#'
+#' @include NewClasses.R
+#' @return
+#' @export
+#'
+#' @examples
+VarClass <- setClass(
   # Class name
-  ".Var",
+  "VarClass",
   
   # Define the slots
   representation = list(
@@ -64,9 +95,20 @@ Var <- function(name, sets=list(), start_position=1, value=NaN, lb=-Inf, ub=Inf,
 # [] --------------------------------------------------------------------------
 setMethod(
   "[", 
-  ".Var",
-  function(x, i, j, ...){
-    pos <- x@position[matrix(c(i, j, ...), nrow=1)]
+  c("VarClass", "ANY", "ANY"),
+  function(x, i, j, ..., drop=TRUE){
+    index <- matrix(c(i, j, ...), nrow=1)
+    pos <- x@position[index]
+    x@variable[[pos]]
+  }
+)
+
+setMethod(
+  "[", 
+  c("VarClass", "ANY", "missing"),
+  function(x, i, j, ..., drop=TRUE){
+    index <- matrix(c(i, ...), nrow=1)
+    pos <- x@position[index]
     x@variable[[pos]]
   }
 )
@@ -76,7 +118,7 @@ setMethod(
 # show ------------------------------------------------------------------------
 setMethod(
   "show", 
-  ".Var",
+  "VarClass",
   function(object){
     print(object@variable)
   }

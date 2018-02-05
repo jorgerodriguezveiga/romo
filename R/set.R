@@ -1,14 +1,34 @@
 # Set -------------------------------------------------------------------------
+#' Function to build a set.
+#'
+#' @param name set name.
+#' @param elements set elements.
+#' @param description set description.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Set <- function(name, elements, description=""){
-  return(.Set(name=name, elements=elements, description=description))
+  return(SetClass(name=name, elements=elements, description=description))
 }
 # --------------------------------------------------------------------------- #
 
 
-# Create Set class ------------------------------------------------------------
-.Set <- setClass(
+# SetClass --------------------------------------------------------------------
+#' Set class.
+#'
+#' @slot name character. 
+#' @slot elements vector. 
+#' @slot description character. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+SetClass <- setClass(
   # Class name
-  ".Set",
+  "SetClass",
   
   # Define the slots
   representation = list(
@@ -35,7 +55,7 @@ Set <- function(name, elements, description=""){
 # show ------------------------------------------------------------------------
 setMethod(
   "show", 
-  "Set",
+  "SetClass",
   function(object){
     cat(object@name, 
         ' = {', 
@@ -82,12 +102,13 @@ dimensionnames <- function(sets){
 
 
 # %in% ------------------------------------------------------------------------
-setMethod(
-  "%in%", 
-  signature(i = "character", s = ".Set"), 
-  function(i, s){
-    (1/e2)*e1
-  }
-)
+#setMethod(
+#  "%in%", 
+#  signature(i = "character", s = "SetClass"), 
+#  function(i, s){
+#    (1/e2)*e1
+#  }
+#)
 # --------------------------------------------------------------------------- #
-i %in% I
+
+
