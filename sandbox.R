@@ -21,7 +21,16 @@ ind=indices(sets)
 
 
 x <- Var(name='x', sets=c(I, TP, set3))
-y <- Var(name='y', sets=list())
+y <- Var(name='y', start_position=5)
+
+(2+3*y)+2 - (-2*x[1,'A',3]+2)/2
+y+y+2
+
+y+y
+y+y+x[1,'A',3]+y
+
+(-2*(x[1,'A',3]+y))/(2+3)
+ConstraintElement(name="asda", 2*x[1,'A',3]+x[1,'B',4] +3 == 10)
 
 
 constr <- Constraint(

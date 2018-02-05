@@ -1,58 +1,32 @@
-setGeneric("fun", function(x, y) standardGeneric("fun"),
-           signature="x")
 
-setMethod("fun", c(x="numeric"), function(x, y) {
-  "fun,numeric-method"
-})
+# ListSets --------------------------------------------------------------------
+ListSets <- function(sets = list()){
+  if(all(unlist(lapply(sets, function(x) class(x)[[1]]))=='.Set')){
+    return(sets)
+  }else{
+    stop("Class of list elements must be '.Set'")
+  }
+}
+# --------------------------------------------------------------------------- #
 
 
-
-
-
-# Create Set class -----------------------------------------------------------
+# indices ---------------------------------------------------------------------
 setGeneric(
-  # Class name
-  name="ListSets", 
-  def=function(x, i, j, ...){
-    standardGeneric("ListSets")
-  }
+  name="indices",
+  def=function(object){standardGeneric("indices")}
 )
 
+
 setMethod(
-  "ListSets", 
-  "list",
-  function(x, i, j, ...){
-    for(s in x){
-      x[[s@name]] = s@elements 
+  f="indices", 
+  signature="list", 
+  definition=function(object){
+    sets = ListSets(object)
+    ind <- list()
+    for(s in sets){
+      ind[[s@name]] = s@elements
     }
-    x
+    return(expand.grid(ind))
   }
 )
 # --------------------------------------------------------------------------- #
-
-o1 = ListSets(a=c(1,2), b=c(3,4))
-
-
-# show ------------------------------------------------------------------------
-setMethod(
-  "show", 
-  "ListSets",
-  function(object){
-    name <- c()
-    for(s in object){
-       name <- c(name, "A")#s@name)
-    }
-    names(object) <- name
-    cat((object)
-  }
-)
-# --------------------------------------------------------------------------- #
-
-
-setMethod(
-  "names", 
-  "ParamORVar",
-  function(x, i, j, ...){
-    x@value[i, j, ...]
-  }
-)

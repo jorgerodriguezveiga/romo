@@ -1,17 +1,56 @@
 
+Constraint <- function(sets, expression(expr)){
+  eval(expression(expr), list(j=1))
+}
 
-# Constraint -----------------------------------------------------------------------
-Constraint <- setClass(
+
+
+# Constraint ------------------------------------------------------------------
+Constraint <- function(name, sets, expr, start_position=1, description=""){
+  if(length(sets)==0){
+    return(ConstraintElement(name, expr, position=start_position, 
+                             state="active", description=description))
+  }else{
+    ind = indices(sets)
+    
+    constr <- list()
+    position = array(dim=dimension(sets), dimnames=dimensionnames(sets))
+    for(i in rownames(ind)){
+      # Positions
+      pos <- (start_position-1) + as.double(i)
+      sets_elem <- as.matrix(ind[i,])
+      position[sets_elem] = pos
+      
+      # Variables
+      # ---------
+      # Name
+      ele_name <- paste(name, "[", paste(sets_elem, collapse=", "), "]", 
+                        sep = "")
+      
+      new_expr = eval(expr, list(j=1))
+      constr[[pos]] <- ConstraintElement(name=ele_name, expr=expr, 
+                                         position=pos, state="active", 
+                                         description=description)
+    }
+    
+    return(.Var(name=name, sets=sets, position=position, constraint=constraint, 
+                description=description))
+  }
+}
+# --------------------------------------------------------------------------- #
+
+
+# .Constraint -----------------------------------------------------------------
+.Constraint <- setClass(
   # Class name
-  "Constraint",
+  ".Constraint",
   
   # Define the slots
   representation = list(
     name = "character",
     sets = "list",
-    start_position = "numeric",
-    position = "data.frame",
-    value = "arrayORnumeric",
+    position = "arrayORnumeric",
+    constraint = "list",
     description = "character"
   ),
   
@@ -24,49 +63,4 @@ Constraint <- setClass(
     return(TRUE)
   }
 )
-
-setMethod(
-  "initialize",
-  "Var",
-  function(.Object, name, sets, position, value, description){
-    dimnames(.Object@value) = dimensionnames(sets)
-    .Object@position = indices(sets)
-    return(.Object)
-  }
-)
 # --------------------------------------------------------------------------- #
-
-
-# positions -------------------------------------------------------------------
-positions <- function(sets){
-  dim <- c()
-  for(s in sets){
-    dim <- c(dim, length(s@elements))
-  }
-  return(dim)
-}
-# --------------------------------------------------------------------------- #
-
-
-# [] --------------------------------------------------------------------------
-setMethod(
-  "[", 
-  "Param",
-  function(x, i, j, ...){
-    x@values[i, j, ...]
-  }
-)
-# --------------------------------------------------------------------------- #
-
-
-# show ------------------------------------------------------------------------
-setMethod(
-  "show", 
-  "Param",
-  function(object){
-    print(object@values)
-  }
-)
-# --------------------------------------------------------------------------- #
-
-

@@ -1,15 +1,20 @@
+# Set -------------------------------------------------------------------------
+Set <- function(name, elements, description=""){
+  return(.Set(name=name, elements=elements, description=description))
+}
+# --------------------------------------------------------------------------- #
 
 
-# Create Set class -----------------------------------------------------------
-Set <- setClass(
+# Create Set class ------------------------------------------------------------
+.Set <- setClass(
   # Class name
-  "Set",
+  ".Set",
   
   # Define the slots
   representation = list(
     name = "character",
     elements = "vector",
-    desciption = "character"
+    description = "character"
   ),
   
   # Make a function that can test to see if the data is consistent.
@@ -22,11 +27,9 @@ Set <- setClass(
       return("Argument 'elements' is required.")
     }
     return(TRUE)
-    
   }
 )
 # --------------------------------------------------------------------------- #
-
 
 
 # show ------------------------------------------------------------------------
@@ -76,3 +79,15 @@ dimensionnames <- function(sets){
   return(dimname)
 }
 # --------------------------------------------------------------------------- #
+
+
+# %in% ------------------------------------------------------------------------
+setMethod(
+  "%in%", 
+  signature(i = "character", s = ".Set"), 
+  function(i, s){
+    (1/e2)*e1
+  }
+)
+# --------------------------------------------------------------------------- #
+i %in% I
