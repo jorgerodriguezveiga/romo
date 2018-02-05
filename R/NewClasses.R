@@ -4,7 +4,7 @@
 #' 
 #' @description Union of array and numeric classes.
 #'  
-#' @exportClass arrayORnumeric
+#' @export
 #' 
 setClassUnion(
   "arrayORnumeric", 

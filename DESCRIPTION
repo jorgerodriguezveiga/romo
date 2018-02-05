@@ -23,5 +23,6 @@ Collate:
     'ListSets.R'
     'Param.R'
     'ParamElement.R'
+    'Sum.R'
     'Var.R'
     'model.R'

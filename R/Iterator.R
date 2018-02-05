@@ -1,4 +1,19 @@
 
+# For -------------------------------------------------------------------------
+#' Title
+#'
+#' @param ... objects of Iterator class.
+#'
+#' @return list with iterator objects.
+#' @export
+#'
+#' @examples
+For <- function(...){
+  return(list(...))
+}
+# --------------------------------------------------------------------------- #
+
+
 # %inset% ---------------------------------------------------------------------
 #' Operator that return the considered name of the element and the iterator. 
 #'
