@@ -68,18 +68,15 @@ setMethod(
 # --------------------------------------------------------------------------- #
 
 
-# positions -------------------------------------------------------------------
-positions <- function(sets){
-  dim <- c()
-  for(s in sets){
-    dim <- c(dim, length(s@elements))
-  }
-  return(dim)
-}
-# --------------------------------------------------------------------------- #
-
-
 # dimension -------------------------------------------------------------------
+#' Return ListSet dimension.
+#'
+#' @param sets ListSet object.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 dimension <- function(sets){
   dim <- c()
   for(s in sets){
@@ -91,6 +88,14 @@ dimension <- function(sets){
 
 
 # dimnames --------------------------------------------------------------------
+#' Return dimnames of the ListSet.
+#'
+#' @param sets 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 dimensionnames <- function(sets){
   dimname <- list()
   for(s in sets){
@@ -98,17 +103,6 @@ dimensionnames <- function(sets){
   }
   return(dimname)
 }
-# --------------------------------------------------------------------------- #
-
-
-# %in% ------------------------------------------------------------------------
-#setMethod(
-#  "%in%", 
-#  signature(i = "character", s = "SetClass"), 
-#  function(i, s){
-#    (1/e2)*e1
-#  }
-#)
 # --------------------------------------------------------------------------- #
 
 

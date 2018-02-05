@@ -1,80 +1,39 @@
-# Iterator --------------------------------------------------------------------
-#' Iterator method.
+
+# %inset% ---------------------------------------------------------------------
+#' Operator that return the considered name of the element and the iterator. 
 #'
-#' @param object object of SetClass class.
+#' @param i element name.
+#' @param s SetClass.
 #'
 #' @return
 #' @export
 #'
 #' @examples
-setGeneric(
-  name="Iterator",
-  def=function(object){standardGeneric("Iterator")}
-)
-
-
-#' Title
-#'
-#' @param list 
-#'
-#' @return
-#' @export
-#' 
-#' @include Set.R
-#'
-#' @examples
-setMethod(
-  f="Iterator", 
-  signature="SetClass", 
-  definition=function(object){
-    sets = ListSets(object)
-    ind <- list()
-    for(s in sets){
-      ind[[s@name]] = s@elements
-    }
-    return(expand.grid(ind))
-  }
-)
+"%inset%" <- function(i, s){
+  return(Iterator(i=deparse(substitute(i)), set=s))
+}
 # --------------------------------------------------------------------------- #
 
 
-.RIterator <- setRefClass("RIterator",
-                          contains="abstractiter",
-                          methods=list(nextElem=function() stop("not implemented")))
-
-LimitIterator <- setRefClass("SleepIterator",
-                             fields=list(times="integer", .curr="integer"),
-                             contains="RIterator",
-                             methods=list(
-                               initialize=function(...) initFields(..., .curr=1L),
-                               nextElem=function() {
-                                 if (!hasNext())
-                                   stop("StopIteration")
-                                 .curr <<- .curr + 1L
-                                 invisible(NULL)
-                               }, hasNext=function() .curr <= times))
-
-unlist(LimitIterator(times=2L))
-
-
-require(itertools)
-
-it <- ihasNext(1:3)
-hasNext(it)
-## [1] TRUE
-
-nextElem(it); nextElem(it); nextElem(it)
-## [1] 1
-## [1] 2
-## [1] 3
-
-hasNext(it)
-
-typeof(it)
-
-j=1
-j %in% it
-
-
-
-
+# Iterator --------------------------------------------------------------------
+#' Title
+#'
+#' @slot i ANY. 
+#' @slot set SetClass. 
+#' 
+#' @include Set.R
+#' @return
+#' @export
+#'
+#' @examples
+Iterator <- setClass(
+  # Class name
+  "Iterator",
+  
+  # Define the slots
+  representation = list(
+    i = "ANY",
+    set = "SetClass"
+  )
+)
+# --------------------------------------------------------------------------- #

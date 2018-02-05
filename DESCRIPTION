@@ -12,14 +12,14 @@ RoxygenNote: 6.0.1
 Imports:
     lpSolveAPI
 Collate: 
+    'Set.R'
+    'Iterator.R'
     'NewClasses.R'
     'ConstraintElement.R'
     'Constraint.R'
     'VarElement.R'
     'VarExpression.R'
     'ConstraintExpression.R'
-    'Set.R'
-    'Iterator.R'
     'ListSets.R'
     'Param.R'
     'ParamElement.R'

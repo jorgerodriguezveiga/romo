@@ -16,7 +16,7 @@ Constraint class.
 \describe{
 \item{\code{name}}{character.}
 
-\item{\code{sets}}{list.}
+\item{\code{iterator}}{list}
 
 \item{\code{position}}{arrayORnumeric.}
 

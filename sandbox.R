@@ -28,21 +28,9 @@ param1 = Param(name = "test",
 )
 
 
-
-pos <- param@position[matrix(c(1,'A',3), nrow=1)]
-param@parameter[[pos]]
-
-ind=indices(sets)
-
-
-test <- function(x, i, ...){
-  print(matrix(c(i, ...), nrow=1))
-}
-
-
 x <- Var(name='x', sets=sets)
-z <- Var(name='z', sets=ListSets(TP))
-y <- Var(name='y', start_position=5)
+z <- Var(name='z', sets=ListSets(TP), start_position = 5)
+y <- Var(name='y', start_position=7)
 
 (2+3*y)+2 - (-2*x[1,'A',3]+2)/2
 y+y+2
@@ -55,3 +43,76 @@ ConstraintElement(name="asda", 2*x[1,'A',3]+x[1,'B',4] +3 == 10)
 
 
 param[1,'B',3]
+
+
+
+
+myfunc <- function(v1) {
+  deparse(substitute(v1))
+}
+
+
+For <- function(expr){
+  iter
+  elements <- list()
+  for(i in set){
+    elements[deparse(substitute(iter))] <- i
+  }
+}
+
+
+setGeneric(
+  name="in",
+  def=function(object){standardGeneric("indices")}
+)
+
+setMethod(
+  "in", 
+  signature(e1 = "ANY", e2 = "SetClass"), 
+  function(e1, e2){
+    return()
+  }
+)
+
+
+Constraint(
+  name = "Demand", 
+  iterator = list(t %inset% TP, i %inset% I),
+  expr=expression(x[i,t,3] <= 4 - z[t])
+)
+
+
+
+
+
+
+
+hasNext((t %inset% TP)$set)
+
+
+
+
+
+
+unlist(LimitIterator(times=2L))
+
+
+
+
+it <- ihasNext(TP@elements)
+
+hasNext(it)
+## [1] TRUE
+
+nextElem(it); nextElem(it); nextElem(it)
+## [1] 1
+## [1] 2
+## [1] 3
+
+hasNext(it)
+
+typeof(it)
+
+j=1
+j %in% it
+

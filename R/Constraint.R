@@ -22,20 +22,32 @@
 #' @examples 
 #' D <- Var("D")
 #' Constraint("Demand", D <= 2, description = "max demand.")
-Constraint <- function(name, expr, sets=list(), start_position=1, 
+Constraint <- function(name, expr, iterator=list(), start_position=1, 
                        description=""){
   
-  sets <- ListSets(sets)
-  
-  if(length(sets)==0){
-    return(ConstraintElement(name, expr, position=start_position, 
+  if(length(iterator)==0){
+    return(ConstraintElement(name, eval(expr), position=start_position, 
                              state="active", description=description))
   }else{
-    ind = indices(sets)
+
+    sets <- c()
+    for(s in iterator){
+      sets <- c(sets, s@set)
+    }
+    
+    ind = indices(ListSets(sets))
     
     constr <- list()
     position = array(dim=dimension(sets), dimnames=dimensionnames(sets))
     for(i in rownames(ind)){
+      
+      count <- 0
+      iterators <- list()
+      for(s in iterator){
+        count <- count + 1
+        iterators[[s@i]] <- as.vector(ind[i,count])
+      }
+      
       # Positions
       pos <- (start_position-1) + as.double(i)
       sets_elem <- as.matrix(ind[i,])
@@ -47,29 +59,30 @@ Constraint <- function(name, expr, sets=list(), start_position=1,
       ele_name <- paste(name, "[", paste(sets_elem, collapse=", "), "]", 
                         sep = "")
       
-      new_expr = eval(expr, list(j=1))
-      constr[[pos]] <- ConstraintElement(name=ele_name, expr=expr, 
+      constr[[pos]] <- ConstraintElement(name=ele_name, 
+                                         expr=eval(expr, iterators), 
                                          position=pos, state="active", 
                                          description=description)
     }
     
-    return(ConstraintClass(name=name, sets=sets, position=position, 
-                           constraint=constraint, description=description))
+    return(ConstraintClass(name=name, iterator=iterator, position=position, 
+                           constraint=constr, description=description))
   }
 }
 # --------------------------------------------------------------------------- #
 
 
-# Constraint -----------------------------------------------------------------
+# ConstraintClass -------------------------------------------------------------
 #' Constraint class.
 #'
 #' @slot name character. 
-#' @slot sets list. 
+#' @slot iterator list 
 #' @slot position arrayORnumeric. 
 #' @slot constraint list. 
 #' @slot description character. 
 #'
 #' @include NewClasses.R
+#' @include Iterator.R
 #' @return Object of ConstraintClass class.
 #' @export
 #'
@@ -81,7 +94,7 @@ ConstraintClass <- setClass(
   # Define the slots
   representation = list(
     name = "character",
-    sets = "list",
+    iterator = "list",
     position = "arrayORnumeric",
     constraint = "list",
     description = "character"
