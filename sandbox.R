@@ -53,4 +53,9 @@ Constraint(
   expr=expression(x[i,t,3] <= 4 - z[t])
 )
 
+Sum(expression(x[i,t,3]-4), t %inset% TP, i %inset% I, )[  ]
 
+
+fun <- function(...){
+  for(...)
+}
