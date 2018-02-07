@@ -1,4 +1,25 @@
 
+# Iter -------------------------------------------------------------------------
+#' Function to build a list of iterators object.
+#'
+#' @param ... objects of Iterator class.
+#'
+#' @return list with iterator objects.
+#' @export
+#'
+#' @examples
+Iter <- function(...){
+  iterators <- list(...)
+  for(i in iterators){
+    if(class(i) != "IteratorClass"){
+      stop(paste("Argument is not an 'IteratorClass'."))
+    }
+  }
+  return(iterators)
+}
+# --------------------------------------------------------------------------- #
+
+
 # For -------------------------------------------------------------------------
 #' Title
 #'
@@ -9,7 +30,7 @@
 #'
 #' @examples
 For <- function(...){
-  return(list(...))
+  return(Iter(...))
 }
 # --------------------------------------------------------------------------- #
 
@@ -25,12 +46,12 @@ For <- function(...){
 #'
 #' @examples
 "%inset%" <- function(i, s){
-  return(Iterator(i=deparse(substitute(i)), set=s))
+  return(IteratorClass(i=deparse(substitute(i)), set=s))
 }
 # --------------------------------------------------------------------------- #
 
 
-# Iterator --------------------------------------------------------------------
+# IteratorClass --------------------------------------------------------------------
 #' Title
 #'
 #' @slot i ANY. 
@@ -41,9 +62,9 @@ For <- function(...){
 #' @export
 #'
 #' @examples
-Iterator <- setClass(
+IteratorClass <- setClass(
   # Class name
-  "Iterator",
+  "IteratorClass",
   
   # Define the slots
   representation = list(

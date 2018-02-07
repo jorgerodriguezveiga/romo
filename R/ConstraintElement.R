@@ -16,14 +16,19 @@
 #' ConstraintElement("Demand", D <= 2, description = "Max demand.")
 ConstraintElement <- function(name, expr, position=1, state="active", 
                               description = ""){
+  eval_expr <- eval(expr)
+  if(class(eval_expr)=="ExpressionClass"){
+    eval_expr <- eval(parse(text=eval_expr@expr))
+  }
   return(
-    ConstraintElementClass(name=name, position=position, 
-                           lhs = expr@lhs,
-                           sense = expr@sense,
-                           rhs = expr@rhs,
-                           state = state,
-                           description = description
-                           )
+    ConstraintElementClass(
+      name=name, position=position, 
+      lhs = eval_expr@lhs,
+      sense = eval_expr@sense,
+      rhs = eval_expr@rhs,
+      state = state,
+      description = description
+     )
   )
 }
 # --------------------------------------------------------------------------- #

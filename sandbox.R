@@ -1,15 +1,15 @@
-I = Set(name = 'I', elements = 1)
+IP = Set(name = 'I', elements = 1)
 TP = Set(name = 'TP', elements = c("A","B"))
 set3 = Set(name = 'C', elements = c(3,4))
 
-sets = ListSets(I, TP, set3)
+sets = ListSets(IP, TP, set3)
 
 param = Param(name = "test",
               sets = sets,
               value = array(c(1,2,3,4), 
                              dim = c(1,2,2), 
                              dimnames = list(
-                               A=I@elements,
+                               A=IP@elements,
                                B=TP@elements,
                                C=set3@elements
                                )
@@ -38,82 +38,33 @@ y+y+2
 y+y
 y+y+x[1,'A',3]+y
 
-(-2*(x[1,'A',3]+y))/(2+3)
+(-2*(x['1','A','3']+y))/(2+3)
 ConstraintElement(name="asda", 2*x[1,'A',3]+x[1,'B',4] +3 == 10)
 
 
-param[1,'B',3]
+typeof(param[1,'B',3]) 
 
 
-
+param1 <- 2
 
 Constraint(
   name = "Demand", 
-  iterator = For(t %inset% TP, i %inset% I),
-  expr=expression(x[i,t,3] <= 4 - z[t])
+  expr= param1*x[i,t,3] <= 4 - z[t],
+  iterator = For(t %inset% TP, i %inset% IP)
 )
 
 Constraint(
   name = "Demand", 
   iterator = For(t %inset% TP),
-  expr=expression(Sum(parse(x[i,t,3]-4), iterator=list(i %inset% I)) <= 1)
+  expr= Sum(param[i,t,3]*x[i,t,3]-4 +y -z[t1], iterator=Iter(i %inset% IP, t1 %inset% TP)) <= 1 - (y + x[1,t,4])
 )
 
 
 
-expr = expression(x[1,t,3])
-substitute(expr, )
-Sum(expression(x[1,t,3]), iterator=list(i %inset% I, t %inset% TP))
-
-Demand <- function(s){
-  for(t %inset% TP)parse(x[i,t,s]), iterator=list(i %inset% I, t %inset% TP)) <= 2
-}
-
-
-iterator = For(t %inset% TP, i %inset% I)
-suma <- function(expr=expression(x[i,t,3]), ...){
-  for(n in iterator){
-    
-  }
-}
-
-ssplit <- function(expr, reg){
-  new_expr <- expr
-  for(r in reg){
-    print(new_expr)
-    new_expr <- unlist(strsplit(expr, paste("(?<=", r, ")", collapse = ""), fixed=T))
-  }
-  return(expr)
-}
-
-
-strsplit("ihilili [ix, xi, i,t] +i-i - i", "(?=>\\[|\\]|,| |\\+|\\-|\\*|\\/)", perl=T) <--------
-
-strsplit("ihilili [xi, i,t] +i-i - i", "(?=>\\[|\\]|,| |\\+|\\-|\\*|\\/)", perl=T)
-
-ssplit(expr, c("[", "]"))
-
-
-get_expr <- function(){
-  return(
-    ssplit(
-      ssplit(
-        expr, 
-        " "),
-      ","),
-    "]")
-  )
-}
 
 
 
-gsub('\[ | i ', "1", expr)
 
 
 
-res <-0
-res <- 0 + for(i in I@elements)for(t in TP@elements){0 + x[i,t,3]}
 
-fun <- function(...){
-  for(...)
-}

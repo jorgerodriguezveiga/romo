@@ -25,8 +25,9 @@
 Constraint <- function(name, expr, iterator=list(), start_position=1, 
                        description=""){
   
+  expr <- as.expression(substitute(expr))
   if(length(iterator)==0){
-    return(ConstraintElement(name, eval(expr), position=start_position, 
+    return(ConstraintElement(name, expr, position=start_position, 
                              state="active", description=description))
   }else{
 
@@ -40,13 +41,8 @@ Constraint <- function(name, expr, iterator=list(), start_position=1,
     constr <- list()
     position = array(dim=dimension(sets), dimnames=dimensionnames(sets))
     for(i in rownames(ind)){
-      
-      count <- 0
-      iterators <- list()
-      for(s in iterator){
-        count <- count + 1
-        iterators[[s@i]] <- as.vector(ind[i,count])
-      }
+      string <- eval(as.character(expr))
+      indexed_expr <- parse(text=get_indexed_expr(string, iterator, i, ind))
       
       # Positions
       pos <- (start_position-1) + as.double(i)
@@ -60,7 +56,7 @@ Constraint <- function(name, expr, iterator=list(), start_position=1,
                         sep = "")
       
       constr[[pos]] <- ConstraintElement(name=ele_name, 
-                                         expr=eval(expr, iterators), 
+                                         expr=indexed_expr, 
                                          position=pos, state="active", 
                                          description=description)
     }

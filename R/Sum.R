@@ -11,7 +11,9 @@
 #' @examples
 Sum <- function(iterator, expr){
   
-  sum_expr <- Expression()
+  expr <- as.expression(substitute(expr))
+  
+  sum_expr <- Expression(expr = 0)
   
   sets <- c()
   for(s in iterator){
@@ -23,20 +25,9 @@ Sum <- function(iterator, expr){
   constr <- list()
   position = array(dim=dimension(sets), dimnames=dimensionnames(sets))
   for(i in rownames(ind)){
-    
-    count <- 0
-    iterators <- list()
-    for(s in iterator){
-      count <- count + 1
-      iterators[[s@i]] <- as.vector(ind[i,count])
-    }
-    
-    
-    new_expression <- eval(as.character(expr))
-    do.call(substitute, list(new_expression, iterators))
-    eval(new_expression)
-    Expression(expr, iterators)
-    sum_expr <- sum_expr + NoExpression(new_expression)
+    string <- eval(as.character(expr))
+    indexed_expr <- get_indexed_expr(string, iterator, i, ind)
+    sum_expr <- sum_expr + NoExpression(indexed_expr)
   }
   
   return(sum_expr)
