@@ -17,6 +17,21 @@ VarElement <- function(name, position=1, value=NaN, lb=-Inf, ub=Inf,
 
 
 # VarElementClass -----------------------------------------------------------------
+#' Var element class.
+#'
+#' @slot name character. 
+#' @slot position numeric. 
+#' @slot value numeric. 
+#' @slot lb numeric. 
+#' @slot ub numeric. 
+#' @slot state character. 
+#' @slot type character. 
+#' @slot description character. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 VarElementClass <- setClass(
   # Class name
   "VarElementClass",

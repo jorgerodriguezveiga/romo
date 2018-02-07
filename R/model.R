@@ -10,7 +10,7 @@ Model <- setClass(
   
   # Define the slots
   slots = c(
-    sets = "S4",
+    sets = "list",
     parameters = "list",
     variables = "list",
     objectives = "list",

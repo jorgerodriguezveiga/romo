@@ -12,11 +12,11 @@ Constraint(name, expr, iterator = list(), start_position = 1,
 
 \item{expr}{mathematical expression to build the constraints.}
 
+\item{iterator}{iterator to build the collection of constraints.}
+
 \item{start_position}{starting point to enumerate the set of constraints.}
 
 \item{description}{constraints description.}
-
-\item{sets}{set to build the collection of constraints.}
 }
 \value{
 Object of ConstraintClass or ConstraintElementClass class .

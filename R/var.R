@@ -14,7 +14,7 @@
 #' @param description variable description.
 #'
 #' @return
-#' @export Var
+#' @export
 #'
 #' @examples
 Var <- function(name, sets=list(), start_position=1, value=NaN, lb=-Inf, ub=Inf, 
@@ -55,7 +55,7 @@ Var <- function(name, sets=list(), start_position=1, value=NaN, lb=-Inf, ub=Inf,
 # --------------------------------------------------------------------------- #
 
   
-# VarClass ------------------------------------------------------------------------
+# VarClass --------------------------------------------------------------------
 #' Variable class.
 #'
 #' @slot name character. 

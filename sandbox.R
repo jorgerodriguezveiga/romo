@@ -60,8 +60,18 @@ Constraint(
 )
 
 
+Objective(
+  name="Cost",
+  sense="minimize",
+  expr=Sum(iterator=Iter(i %inset% IP, t %inset% TP, j %inset% set3), 2*x[i,t,j])
+)
 
+h <- AuxVar(name='h', 
+       iterator=Iter(j %inset% set3),
+       expr=Sum(expr=2*x[i,t,j] - 1, iterator=Iter(i %inset% IP, t %inset% TP)) 
+       )
 
+2 + h[4]
 
 
 

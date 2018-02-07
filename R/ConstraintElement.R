@@ -5,7 +5,7 @@
 #' @param name constraint name.
 #' @param expr constraint expression.
 #' @param position constraint position.
-#' @param state constraint state. Possibilities c("active", "deactive"?).
+#' @param state constraint state. Possibilities c("active", "deactive").
 #' @param description constraint description.
 #'
 #' @return object of ConstraintElementClass class.
@@ -22,10 +22,9 @@ ConstraintElement <- function(name, expr, position=1, state="active",
   }
   return(
     ConstraintElementClass(
-      name=name, position=position, 
-      lhs = eval_expr@lhs,
-      sense = eval_expr@sense,
-      rhs = eval_expr@rhs,
+      name=name, 
+      position=position, 
+      expr = eval_expr,
       state = state,
       description = description
      )
@@ -39,12 +38,11 @@ ConstraintElement <- function(name, expr, position=1, state="active",
 #'
 #' @slot name character. 
 #' @slot position numeric. 
-#' @slot lhs numeric. 
-#' @slot sense character. 
-#' @slot rhs numeric. 
+#' @slot expr numeric.  
 #' @slot state character. 
 #' @slot description character. 
 #'
+#' @include ConstraintExpression.R
 #' @return object of the ConstraintElementClass class.
 #' @export
 ConstraintElementClass <- setClass(
@@ -55,9 +53,7 @@ ConstraintElementClass <- setClass(
   representation = list(
     name = "character",
     position = "numeric",
-    lhs = "numeric",
-    sense = "character",
-    rhs = "numeric",
+    expr = "ConstraintExpressionClass",
     state = "character",
     description = "character"
   ),

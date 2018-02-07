@@ -18,11 +18,7 @@ Constraint element class.
 
 \item{\code{position}}{numeric.}
 
-\item{\code{lhs}}{numeric.}
-
-\item{\code{sense}}{character.}
-
-\item{\code{rhs}}{numeric.}
+\item{\code{expr}}{numeric.}
 
 \item{\code{state}}{character.}
 

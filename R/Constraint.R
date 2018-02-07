@@ -9,8 +9,8 @@
 #' Function to build constraints.
 #'
 #' @param name constraint name.
-#' @param sets set to build the collection of constraints.
 #' @param expr mathematical expression to build the constraints.
+#' @param iterator iterator to build the collection of constraints.
 #' @param start_position starting point to enumerate the set of constraints.
 #' @param description constraints description.
 #'

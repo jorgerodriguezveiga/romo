@@ -14,7 +14,7 @@ ConstraintElement(name, expr, position = 1, state = "active",
 
 \item{position}{constraint position.}
 
-\item{state}{constraint state. Possibilities c("active", "deactive"?).}
+\item{state}{constraint state. Possibilities c("active", "deactive").}
 
 \item{description}{constraint description.}
 }
