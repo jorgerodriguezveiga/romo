@@ -20,6 +20,7 @@ Collate:
     'VarElement.R'
     'VarExpression.R'
     'ConstraintExpression.R'
+    'Expression.R'
     'ListSets.R'
     'Param.R'
     'ParamElement.R'

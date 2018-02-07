@@ -4,7 +4,7 @@
 \alias{Sum}
 \title{Sum over a iterator.}
 \usage{
-Sum(...)
+Sum(iterator, expr)
 }
 \arguments{
 \item{...}{list of iterators.}

@@ -53,8 +53,8 @@ Constraint <- function(name, expr, iterator=list(), start_position=1,
       sets_elem <- as.matrix(ind[i,])
       position[sets_elem] = pos
       
-      # Variables
-      # ---------
+      # Constraints
+      # -----------
       # Name
       ele_name <- paste(name, "[", paste(sets_elem, collapse=", "), "]", 
                         sep = "")
