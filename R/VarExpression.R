@@ -63,6 +63,16 @@ setMethod(
   }
 )
 
+#' Title
+#'
+#' @param e1 VarExpressionClass. 
+#' @param e2 VarElementClass. 
+#'
+#' @include VarElement.R
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "+", 
   signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 

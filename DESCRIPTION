@@ -14,12 +14,12 @@ Imports:
 Collate: 
     'NewClasses.R'
     'Var.R'
+    'VarElement.R'
     'VarExpression.R'
     'AuxVarElement.R'
     'AuxVar.R'
     'Set.R'
     'Iterator.R'
-    'VarElement.R'
     'ConstraintExpression.R'
     'ConstraintElement.R'
     'Constraint.R'
