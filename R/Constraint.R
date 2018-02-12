@@ -11,7 +11,6 @@
 #' @param name constraint name.
 #' @param expr mathematical expression to build the constraints.
 #' @param iterator iterator to build the collection of constraints.
-#' @param start_position starting point to enumerate the set of constraints.
 #' @param description constraints description.
 #'
 #' @return Object of ConstraintClass or ConstraintElementClass class .
@@ -22,13 +21,12 @@
 #' @examples 
 #' D <- Var("D")
 #' Constraint("Demand", D <= 2, description = "max demand.")
-Constraint <- function(name, expr, iterator=list(), start_position=1, 
-                       description=""){
+Constraint <- function(name, expr, iterator=list(), description=""){
   
   expr <- as.expression(substitute(expr))
   if(length(iterator)==0){
-    return(ConstraintElement(name, expr, position=start_position, 
-                             state="active", description=description))
+    return(ConstraintElement(name, expr, position=1, state="active", 
+                             description=description))
   }else{
 
     sets <- c()
@@ -45,7 +43,7 @@ Constraint <- function(name, expr, iterator=list(), start_position=1,
       indexed_expr <- parse(text=get_indexed_expr(string, iterator, i, ind))
       
       # Positions
-      pos <- (start_position-1) + as.double(i)
+      pos <- as.double(i)
       sets_elem <- as.matrix(ind[i,])
       position[sets_elem] = pos
       
