@@ -69,9 +69,10 @@ setReplaceMethod(
       
       v_it <- 1
       for(v in value@variable){
-        value@variable[[v_it]]@position <- start_pos + v_it
-        print(value@variable[[v_it]]@position)
-        v_it <- v_it + 1
+        if(class(value@variable[[v_it]]) == "VarElementClass"){
+          value@variable[[v_it]]@position <- start_pos + v_it
+          v_it <- v_it + 1
+        }
       }
       
       x@objects[[name]] <- value
@@ -80,7 +81,7 @@ setReplaceMethod(
       
       x@info@nvars <- x@info@nvars + 1
       value@name <- name
-      value@position <- x@info@nvars + 1
+      value@position <- x@info@nvars
       x@objects[[value@name]] <- value
       
     }else if(class(value)=="ObjectiveClass"){
@@ -97,7 +98,6 @@ setReplaceMethod(
       c_it <- 1
       for(c in value@constraint){
         value@constraint[[c_it]]@position <- start_pos + c_it
-        print(value@constraint[[c_it]]@position)
         c_it <- c_it + 1
       }
       
@@ -107,12 +107,13 @@ setReplaceMethod(
       
       x@info@ncons <- x@info@ncons + 1
       value@name <- name
-      value@position <- x@info@nvars + 1
+      value@position <- x@info@ncons
       
       x@objects[[value@name]] <- value
       
     }else{
       
+      print(value)
       x@objects[[name]] <- value
       
     }
@@ -133,3 +134,102 @@ setMethod(
 # --------------------------------------------------------------------------- #
 
 
+# =============================================================================
+# Functions
+# =============================================================================
+
+# get_objects -----------------------------------------------------------------
+get_objects <- function(model){
+  # model info
+  nvars <- model@info@nvars
+  ncons <- model@info@ncons
+  nobjs <- model@info@nobjs
+  
+  objects <- list()
+  
+  # Constraints
+  i_cons <- 1
+
+  A <- list()
+  sense <- c()
+  rhs <- c()
+
+  
+  
+  objects$variables <- list()
+  objects$objective <- list()
+  for(o in model@objects){
+    if(class(o)=="ConstraintClass"){
+      
+      
+      for(c in o@constraint){
+        i_cons <- i_cons + 1
+        A[[i_cons]] <- c@lhs
+        sense <- c(sense, c@lhs)
+        rhs <- c(rhs, c@lhs)
+      }
+      
+      
+      
+      library(plyr)
+      m <- t(rbind.fill.matrix(mats))
+      m[is.na(m)] <- 0
+    }else if(class(o)=="ConstraintElementClass"){
+      
+    }else if(class(value)=="VarClass"){
+      
+      start_pos <- x@info@nvars
+      x@info@nvars <- start_pos + length(value@variable)
+      value@name <- name
+      
+      v_it <- 1
+      for(v in value@variable){
+        if(class(value@variable[[v_it]]) == "VarElementClass"){
+          value@variable[[v_it]]@position <- start_pos + v_it
+          v_it <- v_it + 1
+        }
+      }
+      
+      x@objects[[name]] <- value
+      
+    }else if(class(value)=="VarElementClass"){
+      
+      x@info@nvars <- x@info@nvars + 1
+      value@name <- name
+      value@position <- x@info@nvars
+      x@objects[[value@name]] <- value
+      
+    }else if(class(value)=="ObjectiveClass"){
+      
+      x@info@nobjs <- x@info@nobjs + 1
+      x@objects[[name]] <- value
+      
+    }else if(class(value)=="ConstraintClass"){
+      
+      start_pos <- x@info@ncons
+      x@info@ncons <- start_pos + length(value@constraint)
+      value@name <- name
+      
+      c_it <- 1
+      for(c in value@constraint){
+        value@constraint[[c_it]]@position <- start_pos + c_it
+        c_it <- c_it + 1
+      }
+      
+      x@objects[[name]] <- value
+      
+    }else if(class(value)=="ConstraintElementClass"){
+      
+      x@info@ncons <- x@info@ncons + 1
+      value@name <- name
+      value@position <- x@info@ncons
+      
+      x@objects[[value@name]] <- value
+    }
+  }
+  
+  # Constraints
+  objects$constraints <- list()
+  objects$constraints$A <- matrix()
+  objects$constraints$rhs <- numeric()
+}

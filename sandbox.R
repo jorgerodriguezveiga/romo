@@ -39,12 +39,22 @@ model$Cost <- Objective(
   expr=Sum(iterator=Iter(i %inset% model$I, t %inset% model$T, j %inset% model$C), 2*model$x[i,t,j])
 )
 
-model$h <- class(AuxVar(name='h', 
+model$h <- AuxVar(name='h', 
   iterator=Iter(j %inset% model$C),
   expr=Sum(expr=2*model$x[i,t,j] - 1, iterator=Iter(i %inset% model$I, t %inset% model$T)) 
-))
+)
 
-2 + h[4]
+
+model
+
+for(){
+  
+}
+
+
+
+
+
 
 
 

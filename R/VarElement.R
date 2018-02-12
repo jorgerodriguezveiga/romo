@@ -16,7 +16,7 @@ VarElement <- function(name, position=1, value=NaN, lb=-Inf, ub=Inf,
 # --------------------------------------------------------------------------- #
 
 
-# VarElementClass -----------------------------------------------------------------
+# VarElementClass -------------------------------------------------------------
 #' Var element class.
 #'
 #' @slot name character. 
