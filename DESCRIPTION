@@ -25,6 +25,7 @@ Collate:
     'Constraint.R'
     'Expression.R'
     'ListSets.R'
+    'ModelInfo.R'
     'Model.R'
     'Objective.R'
     'Param.R'

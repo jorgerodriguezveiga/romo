@@ -99,7 +99,7 @@ setMethod(
   function(x, i, j, ..., drop=TRUE){
     index <- matrix(c(i, j, ...), nrow=1)
     pos <- x@position[index]
-    x@variable[[pos]]
+    return(x@variable[[pos]])
   }
 )
 
@@ -109,7 +109,7 @@ setMethod(
   function(x, i, j, ..., drop=TRUE){
     index <- matrix(c(i, ...), nrow=1)
     pos <- x@position[index]
-    x@variable[[pos]]
+    return(x@variable[[pos]])
   }
 )
 # --------------------------------------------------------------------------- #

@@ -1,5 +1,11 @@
 
 # Model -----------------------------------------------------------------------
+#' Initialize model object.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 Model <- function(){
   return(
     ModelClass(
@@ -12,6 +18,17 @@ Model <- function(){
 
 
 # ModelClass ------------------------------------------------------------------
+#' Model class.
+#'
+#' @slot objects list. 
+#' @slot info ModelInfoClass. 
+#'
+#' @return
+#' @export
+#' 
+#' @include ModelInfo.R
+#'
+#' @examples
 ModelClass <- setClass(
   # Class name
   "ModelClass",
@@ -20,21 +37,6 @@ ModelClass <- setClass(
   slots = c(
     objects = "list",
     info = "ModelInfoClass"
-  )
-)
-# --------------------------------------------------------------------------- #
-
-
-# ModelInfoClass --------------------------------------------------------------
-ModelInfoClass <- setClass(
-  # Class name
-  "ModelInfoClass",
-  
-  # Define the slots
-  slots = c(
-    nvars = "numeric",
-    nobjs = "numeric",
-    ncons = "numeric"
   )
 )
 # --------------------------------------------------------------------------- #
@@ -77,25 +79,51 @@ ModelInfoClass <- setClass(
 
 
 
-# $ ---------------------------------------------------------------------------
-setMethod(
+# $<- -------------------------------------------------------------------------
+#' Assign objects to model class.
+#'
+#' @param ModelClass 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+setReplaceMethod(
   "$", 
   "ModelClass", 
-  function(x){
+  function(x, name, value){
     # TODO: check types
     # TODO: change VarElements position.
     if(class(value)=="VarClass"){
-      start_pos <- x@info@nvars + length(value@variable)
-      x@info@nvars <- start_pos
+      start_pos <- x@info@nvars
+      x@info@nvars <- start_pos + length(value@variable)
+      value@name <- name
       
-      for(v in value@variable)
+      v_it <- 1
+      for(v in value@variable){
+        value@variable[[v_it]]@position <- start_pos + 1
+      }
+      
       x@objects[[value@name]] <- value
+      
     }else if(class(value)=="VarElementClass"){
       x@info@nvars <- x@info@nvars + 1
+      value@name <- name
+      value@position <- x@info@nvars + 1
+      
+      x@objects[[value@name]] <- value
     }else if(class(value)=="ObjectiveClass"){
       x@info@nobjs <- x@info@nobjs + 1
+      x@objects[[value@name]] <- value
     }else if(class(value)=="ConstraintClass"){
-      x@info@ncons <- x@info@ncons + length(value@constraint)
+      start_pos <- x@info@ncons
+      x@info@ncons <- start_pos + length(value@constraint)
+      value@name <- name
+      value@variable <- lapply(value@constraint, 
+                               function(x){x@position+start_pos})
+      
+      x@objects[[value@name]] <- Constraint(name=name, expr, iterator=list(), start_position=1, 
+                                            description="")
     }else if(class(value)=="ConstraintElementClass"){
       x@info@ncons <- x@info@ncons + 1
     }else{
@@ -107,22 +135,14 @@ setMethod(
 # --------------------------------------------------------------------------- #
 
 
-# $<- -------------------------------------------------------------------------
-setReplaceMethod(
-  "$", 
-  c("ModelClass", "ANY"), 
-  function(x, value){
-    print(x)
-    print(value)
-    if(class(value)=="SetClass"){
-      print(x@sets)
-      x@sets[[value@name]] <- value
-      #x@sets[[i]] <- value
-    }else{
-      x@sets[[value@name]] <- 1
-    }
-    return(x)
-  }
+# $ ---------------------------------------------------------------------------
+setMethod(
+ "$", 
+ signature="ModelClass", 
+ function(x, name){
+   print(name)
+   return(x@objects[[name]])
+ }
 )
 # --------------------------------------------------------------------------- #
 

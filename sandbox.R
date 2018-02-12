@@ -1,46 +1,40 @@
-IP = Set(name = 'I', elements = 1)
-TP = Set(name = 'TP', elements = c("A","B"))
-set3 = Set(name = 'C', elements = c(3,4))
+model <- Model()
 
-sets = ListSets(IP, TP, set3)
+model$I <- Set(name = 'I', elements = 1)
+model$T <- Set(name = 'T', elements = c("A","B"))
+model$C = Set(name = 'C', elements = c(3,4))
 
-param = Param(name = "test",
-              sets = sets,
+sets = ListSets(model$I, model$T, model$C)
+
+model$test = Param(name = "test",
+              sets = ListSets(model$I, model$T, model$C),
               value = array(c(1,2,3,4), 
                              dim = c(1,2,2), 
                              dimnames = list(
-                               A=IP@elements,
-                               B=TP@elements,
-                               C=set3@elements
+                               A=model$I@elements,
+                               B=model$T@elements,
+                               C=model$C@elements
                                )
                              )
+
               )
 
-set1 = TP
-param1 = Param(name = "test",
-              sets = set1,
-              value = array(c(1,2), 
-                            dim = c(2), 
-                            dimnames = list(
-                              B=TP@elements
-                            )
-              )
-)
 
+model$x <- Var(name='x', sets=sets)
+model$z <- Var(name='z', sets=model$T)
+model$y <- Var(name='y')
 
 x <- Var(name='x', sets=sets)
-z <- Var(name='z', sets=ListSets(TP), start_position = 5)
-y <- Var(name='y', start_position=7)
+model$x
+x
+2*model$x[1,'A',3] + model$y
+model$y + 2  
 
-(2+3*y)+2 - (-2*x[1,'A',3]+2)/2
-y+y+2
+model$asda <- ConstraintElement(name="asda", 2*model$x[1,'A',3]+ model$x[1,'B',4] +3 == 10)
 
-y+y
-y+y+x[1,'A',3]+y
+class(model$asda)
 
-(-2*(x['1','A','3']+y))/(2+3)
-ConstraintElement(name="asda", 2*x[1,'A',3]+x[1,'B',4] +3 == 10)
-
+2*model$x[1,'A',3]+ model$x[1,'B',4] +3 == 10
 
 typeof(param[1,'B',3]) 
 

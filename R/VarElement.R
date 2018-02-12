@@ -72,13 +72,13 @@ VarElementClass <- setClass(
 
 
 # show ------------------------------------------------------------------------
-setMethod(
-  "show", 
-  "VarElementClass",
-  function(object){
-    print(object@value)
-  }
-)
+# setMethod(
+#   "show", 
+#   "VarElementClass",
+#   function(object){
+#     print(object@value)
+#   }
+# )
 # --------------------------------------------------------------------------- #
 
 
