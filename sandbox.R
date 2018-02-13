@@ -45,15 +45,16 @@ model$h <- AuxVar(name='h',
 )
 
 
-model
-
-for(){
-  
-}
-
-
+model$Nmax <- Constraint(
+  name = "Nmax", 
+  expr= model$h[j] - 2 <= 4 - model$y,
+  iterator = For(j %inset% model$C)
+)
 
 
+get_objects(model)
+
+solve(model)
 
 
 

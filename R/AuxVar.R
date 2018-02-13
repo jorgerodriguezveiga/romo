@@ -1,5 +1,5 @@
 
-# AuxVar -------------------------------------------------------------------------
+# AuxVar ----------------------------------------------------------------------
 #' Function to create auxiliar variables.
 #'
 #' @param name variable name.
@@ -39,9 +39,9 @@ AuxVar <- function(name, expr, iterator=list(), description=""){
       
       # Positions
       pos <- (start_position-1) + as.double(i)
-      sets_elem <- as.matrix(ind[i,])
+      sets_elem <- as.matrix(as.character(ind[i,]))
       if(length(sets_elem)==1){
-        sets_elem <- as.vector(sets_elem)
+        sets_elem <- as.character(sets_elem)
       }
       position[sets_elem] = pos
       
@@ -55,7 +55,7 @@ AuxVar <- function(name, expr, iterator=list(), description=""){
                                    description=description)
     }
     return(
-      VarClass(
+      AuxVarClass(
         name=name, 
         sets=sets, 
         position=position, 
@@ -68,3 +68,73 @@ AuxVar <- function(name, expr, iterator=list(), description=""){
 
 # --------------------------------------------------------------------------- #
 
+
+# AuxVarClass -----------------------------------------------------------------
+#' Auxiliary Variable class.
+#'
+#' @slot name character. 
+#' @slot sets list. 
+#' @slot position arrayORnumeric. 
+#' @slot variable list. 
+#' @slot description character. 
+#'
+#' @include NewClasses.R
+#' @return
+#' @export
+#'
+#' @examples
+AuxVarClass <- setClass(
+  # Class name
+  "AuxVarClass",
+  
+  # Define the slots
+  representation = list(
+    name = "character",
+    sets = "list",
+    position = "arrayORnumeric",
+    variable = "list",
+    description = "character"
+  ),
+  
+  # Make a function that can test to see if the data is consistent.
+  # This is not called if you have an initialize function defined!
+  validity=function(object){
+    if(length(object@name)==0) return("Argument 'name' is required.")
+    return(TRUE)
+  }
+)
+# --------------------------------------------------------------------------- #
+
+
+# [] --------------------------------------------------------------------------
+setMethod(
+  "[", 
+  c("AuxVarClass", "ANY", "ANY"),
+  function(x, i, j, ..., drop=TRUE){
+    index <- matrix(as.character(i, j, ...), nrow=1)
+    pos <- x@position[index]
+    return(x@variable[[pos]])
+  }
+)
+
+setMethod(
+  "[", 
+  c("AuxVarClass", "ANY", "missing"),
+  function(x, i, j, ..., drop=TRUE){
+    index <- matrix(as.character(i, ...), nrow=1)
+    pos <- x@position[index]
+    return(x@variable[[pos]])
+  }
+)
+# --------------------------------------------------------------------------- #
+
+
+# show ------------------------------------------------------------------------
+setMethod(
+  "show", 
+  "AuxVarClass",
+  function(object){
+    print(object@variable)
+  }
+)
+# --------------------------------------------------------------------------- #
