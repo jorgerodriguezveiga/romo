@@ -33,7 +33,7 @@ SetClass <- setClass(
   # Define the slots
   representation = list(
     name = "character",
-    elements = "vector",
+    elements = "vectorORnull",
     description = "character"
   ),
   

@@ -68,7 +68,7 @@ ExpressionClass <- setClass(
 #'
 #' @examples
 get_indexed_expr <- function(string, iterator, i, ind){
-  split_elems <- "\\[|\\]|,| |\\+|\\-|\\*|\\/|<=|>=|=="
+  split_elems <- "\\[|\\]|,| |\\+|\\-|\\*|\\/|<=|>=|==|\\(|\\)"
   splited_expr <- unlist(strsplit(string, 
                                   paste("(?=>", split_elems, ")", sep=""), 
                                   perl=T))

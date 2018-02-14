@@ -46,7 +46,7 @@ Constraint <- function(name, expr, iterator=list(), description=""){
       pos <- as.double(i)
       sets_elem <- as.matrix(as.character(ind[i,]))
       position[sets_elem] <- pos
-      print(position)
+      
       # Constraints
       # -----------
       # Name

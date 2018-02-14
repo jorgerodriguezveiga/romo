@@ -7,6 +7,20 @@
 #' @export
 #' 
 setClassUnion(
+  "vectorORnull", 
+  c("vector", "NULL")
+)
+# --------------------------------------------------------------------------- #
+
+
+# arrayORnumeric --------------------------------------------------------------
+#' @title Array and numeric class.
+#' 
+#' @description Union of array and numeric classes.
+#'  
+#' @export
+#' 
+setClassUnion(
   "arrayORnumeric", 
   c("array", "numeric")
 )
