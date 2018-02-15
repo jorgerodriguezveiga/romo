@@ -13,8 +13,8 @@ Imports:
     lpSolveAPI
 Collate: 
     'NewClasses.R'
-    'Var.R'
     'VarElement.R'
+    'Var.R'
     'VarExpression.R'
     'AuxVarElement.R'
     'AuxVar.R'

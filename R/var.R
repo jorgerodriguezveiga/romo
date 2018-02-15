@@ -12,7 +12,8 @@
 #' @param state variable state.
 #' @param type variable type.
 #' @param description variable description.
-#'
+#' 
+#' @include VarElement.R
 #' @return
 #' @export
 #'
@@ -97,7 +98,7 @@ setMethod(
   "[", 
   c("VarClass", "ANY", "ANY"),
   function(x, i, j, ..., drop=TRUE){
-    index <- matrix(c(i, j, ...), nrow=1)
+    index <- matrix(as.character(c(i, j, ...)), nrow=1)
     pos <- x@position[index]
     return(x@variable[[pos]])
   }
@@ -107,7 +108,7 @@ setMethod(
   "[", 
   c("VarClass", "ANY", "missing"),
   function(x, i, j, ..., drop=TRUE){
-    index <- matrix(c(i, ...), nrow=1)
+    index <- matrix(as.character(c(i, ...)), nrow=1)
     pos <- x@position[index]
     return(x@variable[[pos]])
   }

@@ -60,22 +60,49 @@ setMethod(
 # =============================================================================
 
 # + ---------------------------------------------------------------------------
+#' Sum elements.
+#'
+#' @param e1 ANY. 
+#' @param e2 AuxVarElementClass. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "+", 
-  signature(e1 = "numeric", e2 = "AuxVarElementClass"), 
+  signature(e1 = "ANY", e2 = "AuxVarElementClass"), 
   function(e1, e2){
     e1 + e2@expr
   }
 )
 
+#' Sum elements.
+#'
+#' @param e1 AuxVarElementClass. 
+#' @param e2 ANY. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "+", 
-  signature(e1 = "AuxVarElementClass", e2 = "numeric"), 
+  signature(e1 = "AuxVarElementClass", e2 = "ANY"), 
   function(e1, e2){
-    e2 + e1@expr
+    e1@expr + e2
   }
 )
 
+#' Sum elements.
+#'
+#' @param e1 AuxVarElementClass. 
+#' @param e2 AuxVarElementClass. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "+", 
   signature(e1 = "AuxVarElementClass", e2 = "AuxVarElementClass"), 
@@ -87,35 +114,53 @@ setMethod(
 
 
 # - ---------------------------------------------------------------------------
-setMethod(
-  "-",
-  signature(e1 = "AuxVarElementClass", e2 = "AuxVarElementClass"), 
-  function(e1, e2){
-    e1@expr - e2@expr
-  }
-)
-
-setMethod(
-  "-",
-  signature(e1 = "AuxVarElementClass", e2 = "numeric"), 
-  function(e1, e2){
-    e1@expr - e2
-  }
-)
-
-setMethod(
-  "-",
-  signature(e1 = "numeric", e2 = "AuxVarElementClass"), 
-  function(e1, e2){
-    e1 - e2@expr
-  }
-)
-
+#' Substrac element.
+#'
+#' @param e1 AuxVarElementClass. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "-", 
   signature(e1 = "AuxVarElementClass"), 
   function(e1){
     0 - e1@expr
+  }
+)
+
+#' Substrac element.
+#'
+#' @param e1 AuxVarElementClass. 
+#' @param e2 ANY.
+#' 
+#' @return
+#' @export
+#'
+#' @examples
+setMethod(
+  "-", 
+  signature(e1 = "AuxVarElementClass", e2 = "ANY"), 
+  function(e1, e2){
+    e1 + (-e2)
+  }
+)
+
+#' Substrac element.
+#' 
+#' @param e2 ANY.
+#' @param e1 AuxVarElementClass. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+setMethod(
+  "-", 
+  signature(e1 = "ANY", e2 = "AuxVarElementClass"), 
+  function(e1, e2){
+    e1 + (-e2)
   }
 )
 # -----------------------------------------------------------------------------
@@ -124,7 +169,15 @@ setMethod(
 # * ---------------------------------------------------------------------------
 setMethod(
   "*", 
-  signature(e1 = "numeric", e2 = "AuxVarElementClass"), 
+  signature(e1 = "AuxVarElementClass", e2 = "AuxVarElementClass"), 
+  function(e1, e2){
+    e1@expr*e2@expr
+  }
+)
+
+setMethod(
+  "*", 
+  signature(e1 = "ANY", e2 = "AuxVarElementClass"), 
   function(e1, e2){
     e1*e2@expr
   }
@@ -132,9 +185,9 @@ setMethod(
 
 setMethod(
   "*", 
-  signature(e1 = "AuxVarElementClass", e2 = "numeric"), 
+  signature(e1 = "AuxVarElementClass", e2 = "ANY"), 
   function(e1, e2){
-    e2*e1
+    e1@expr*e2
   }
 )
 # -----------------------------------------------------------------------------
@@ -143,9 +196,9 @@ setMethod(
 # / ---------------------------------------------------------------------------
 setMethod(
   "/", 
-  signature(e1 = "AuxVarElementClass", e2 = "numeric"), 
+  signature(e1 = "AuxVarElementClass", e2 = "ANY"), 
   function(e1, e2){
-    (1/e2)*e1
+    e1*(1/e2)
   }
 )
 # -----------------------------------------------------------------------------

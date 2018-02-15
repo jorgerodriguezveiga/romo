@@ -6,12 +6,12 @@ m <- Model()
 # Sets
 # =============================================================================
 
-np <- 10
+m$np <- 10
 
 m$I <- Set(name="I", elements = c('air1', 'air2'))
 m$G <- Set(name="G", elements = c('air'))
-m$T <- Set(name="T", elements = seq(1,np))
-m$T0 <- Set(name="T0", elements = as.character(seq(0,np)))
+m$T <- Set(name="T", elements = seq(1, m$np))
+m$T0 <- Set(name="T0", elements = as.character(seq(0, m$np)))
 
 # Corregir para que los sets puedan definirse sobre otros conjunto: SetExpression.
 m$G_I <- list("air"=c('air1', 'air2'))
@@ -22,7 +22,7 @@ m$T_int <- function(t1, t2){
   t2 <- as.numeric(t2)
   if(t1<=t2){
     return(Set(name="T_int", 
-               elements=as.character(max(1, as.numeric(t1)):min(np,as.numeric(t2)))
+               elements=as.character(max(1, as.numeric(t1)):min(m$np, as.numeric(t2)))
     )
     )
   }else{
@@ -56,11 +56,11 @@ m$IOW <- c('air1'=0, 'air2'=0)
 
 # Groups
 # ======
-m$nMax <- array(c(2, 2, 2, 2, 2, 2, 2, 2, 2, 2), 
-                dim = c(1, np), 
+m$nMax <- array(2,
+                dim = c(1, m$np), 
                 dimnames = list(c('air'), m$T@elements))
-m$nMin <- array(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 
-                dim = c(1, np), 
+m$nMin <- array(0, 
+                dim = c(1, m$np), 
                 dimnames = list(c('air'), m$T@elements))
 
 # Wildfire
@@ -68,7 +68,7 @@ m$nMin <- array(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 m$PER <- c('1'=100, '2'=100, '3'=100, '4'=100, '5'=100, '6'=100, '7'=100, '8'=100, '9'=100, '10'=100)
 m$NVC <- c('1'=1000, '2'=1000, '3'=1000, '4'=1000, '5'=1000, '6'=1000, '7'=1000, '8'=1000, '9'=1000, '10'=1000)
 m$EF <- array(1, 
-              dim = c(length(m$I@elements), np), 
+              dim = c(length(m$I@elements), m$np), 
               dimnames = list(m$I@elements, m$T@elements))
 
 # Auxiliar
@@ -109,9 +109,17 @@ m$u <- AuxVar(
             )
 )
 
-- sum{t2 in T_int[1, t-1]} e[i, t2];
-var w {i in I, t in T} = u[i, t] - r[i, t] - fl[i, t];
-var z {i in I}         = sum{t in T} e[i, t];
+m$w <- AuxVar(
+  name="w", 
+  iterator=Iter(i %inset% m$I, t %inset% m$T), 
+  expr = m$u[i, t] - m$r[i, t] - m$fl[i, t]
+)
+
+m$z <- AuxVar(
+  name="z", 
+  iterator=Iter(i %inset% m$I), 
+  expr = Sum(iterator = Iter(t %inset% m$T), expr = m$e[i, t])
+)
 
 
 # =============================================================================
@@ -123,23 +131,51 @@ var z {i in I}         = sum{t in T} e[i, t];
 
 # Auxiliary variables
 # -------------------
-var Cost = + sum{i in I, t in T} C[i]*u[i, t] 
-+ sum{i in I} P[i]*z[i] 
-+ sum{t in T} NVC[t]*y[t-1];
+m$Cost <- AuxVar(
+  name="Cost",
+  expr = Sum(
+          iterator = Iter(i1 %inset% m$I, t1 %inset% m$T), 
+          expr = m$C[i1]*m$u[i1, t1]) + Sum(
+          iterator = Iter(i2 %inset% m$I), 
+          expr = m$P[i2]*m$z[i2]) + Sum(
+          iterator = Iter(t2 %inset% m$T), 
+          expr = m$NVC[t2]*m$y[as.numeric(t2)-1])
+)
 
-var Penalty = sum{g in G, t in T} M_prime*mu[g, t] + y[m];
+m$Penalty <- AuxVar(
+  name="Cost",
+  expr = Sum(
+          iterator = Iter(g %inset% m$G, t %inset% m$T),
+          expr = m$M_prime*m$mu[g, t]
+  ) + m$y[m$np]
+)
+    
 
 # Total Cost
 # ----------
-minimize Total_Cost: 
-  Cost + Penalty
-;
+m$Total_Cost <- Objective(
+  name = "Total_Cost",
+  sense = "minimize",
+  expr = m$Cost + m$Penalty
+)
+
 
 # Constraints
 # ===========
 
 # Wildfire containment
 # --------------------
+m$cont_1 <- Constraint(
+  name = "cont_1",
+  expr = (Sum(
+      iterator = Iter(t1 %inset% m$T), 
+      expr = m$PER[t1]*m$y[as.numeric(t1)-1]) 
+   <= Sum(
+      iterator = Iter(i %inset% m$I, t2 %inset% m$T),
+      expr = m$PR[i,t2]*m$w[i,t2]
+      ))
+)
+
 subject to cont_1:
   sum{t in T} PER[t]*y[t-1] <= sum{i in I, t in T} PR[i,t]*w[i,t]
 ;

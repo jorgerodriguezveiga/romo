@@ -24,6 +24,7 @@ model$x <- Var(name='x', sets=model$sets)
 model$z <- Var(name='z', sets=model$T)
 model$y <- Var(name='y')
 
+
 model$asda <- ConstraintElement(name="asda", 2*model$x[1,'A',3]+ model$x[1,'B',4] +3 == 10)
 
 model$Demand <- Constraint(

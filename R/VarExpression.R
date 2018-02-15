@@ -46,6 +46,15 @@ VarExpressionClass <- setClass(
 # =============================================================================
 
 # + ---------------------------------------------------------------------------
+#' Sum elements.
+#'
+#' @param e1 VarExpressionClass. 
+#' @param e2 VarExpressionClass. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "+", 
   signature(e1 = "VarExpressionClass", e2 = "VarExpressionClass"), 
@@ -63,11 +72,11 @@ setMethod(
   }
 )
 
-#' Title
+#' Sum elements.
 #'
 #' @param e1 VarExpressionClass. 
 #' @param e2 VarElementClass. 
-#'
+#' 
 #' @include VarElement.R
 #' @return
 #' @export
@@ -81,6 +90,16 @@ setMethod(
   }
 )
 
+#' Sum elements.
+#'
+#' @param e1 VarElementClass. 
+#' @param e2 VarExpressionClass. 
+#'
+#' @include VarElement.R
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "+", 
   signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
@@ -89,6 +108,15 @@ setMethod(
   }
 )
 
+#' Sum elements.
+#'
+#' @param e1 VarExpressionClass. 
+#' @param e2 numeric. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "+", 
   signature(e1 = "VarExpressionClass", e2 = "numeric"), 
@@ -97,62 +125,56 @@ setMethod(
   }
 )
 
+#' Sum elements.
+#'
+#' @param e1 numeric. 
+#' @param e2 VarExpressionClass. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "+", 
   signature(e1 = "numeric", e2 = "VarExpressionClass"), 
   function(e1, e2){
-    e2+e1
+    e2 + e1
   }
 )
 # -----------------------------------------------------------------------------
 
 
 # - ---------------------------------------------------------------------------
+#' Substrack elements.
+#'
+#' @param e1 VarExpressionClass. 
+#' @param e2 VarExpressionClass. 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "-", 
   signature(e1 = "VarExpressionClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
-    e1 + (-e2)
+    1*e1 + (-1)*e2
   }
 )
 
 setMethod(
   "-", 
-  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
+  signature(e1 = "ANY", e2 = "VarExpressionClass"), 
+  function(e1, e2){
+    e1 + VarExpression(independent=-e2@independent, variables=-e2@variables)
+  }
+)
+
+setMethod(
+  "-", 
+  signature(e1 = "VarExpressionClass", e2 = "ANY"), 
   function(e1, e2){
     e1 + (-e2)
-  }
-)
-
-setMethod(
-  "-", 
-  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
-  function(e1, e2){
-    e1 + (-e2)
-  }
-)
-
-setMethod(
-  "-", 
-  signature(e1 = "numeric", e2 = "VarExpressionClass"), 
-  function(e1, e2){
-    e1 + VarExpression(independent= - e2@independent, variables= - e2@variables)
-  }
-)
-
-setMethod(
-  "-", 
-  signature(e1 = "VarExpressionClass", e2 = "numeric"), 
-  function(e1, e2){
-    e1 + (-e2)
-  }
-)
-
-setMethod(
-  "-", 
-  signature(e1 = "VarExpressionClass"), 
-  function(e1){
-    0 - e1
   }
 )
 # -----------------------------------------------------------------------------

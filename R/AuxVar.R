@@ -39,7 +39,7 @@ AuxVar <- function(name, expr, iterator=list(), description=""){
       
       # Positions
       pos <- (start_position-1) + as.double(i)
-      sets_elem <- as.matrix(as.character(ind[i,]))
+      sets_elem <- matrix(sapply(ind[i,], as.character), nrow=1)
       if(length(sets_elem)==1){
         sets_elem <- as.character(sets_elem)
       }
@@ -111,7 +111,7 @@ setMethod(
   "[", 
   c("AuxVarClass", "ANY", "ANY"),
   function(x, i, j, ..., drop=TRUE){
-    index <- matrix(as.character(i, j, ...), nrow=1)
+    index <- matrix(as.character(c(i, j, ...)), nrow=1)
     pos <- x@position[index]
     return(x@variable[[pos]])
   }
@@ -121,7 +121,7 @@ setMethod(
   "[", 
   c("AuxVarClass", "ANY", "missing"),
   function(x, i, j, ..., drop=TRUE){
-    index <- matrix(as.character(i, ...), nrow=1)
+    index <- matrix(as.character(c(i, ...)), nrow=1)
     pos <- x@position[index]
     return(x@variable[[pos]])
   }

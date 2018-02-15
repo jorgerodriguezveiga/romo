@@ -119,7 +119,7 @@ setMethod(
 
 setMethod(
   "-",
-  signature(e1 = "VarElementClass", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "ANY"), 
   function(e1, e2){
     e1 + (-e2)
   }
@@ -127,11 +127,9 @@ setMethod(
 
 setMethod(
   "-",
-  signature(e1 = "numeric", e2 = "VarElementClass"), 
+  signature(e1 = "ANY", e2 = "VarElementClass"), 
   function(e1, e2){
-    variables=numeric(e2@position)
-    variables[e2@position] = - 1
-    VarExpression(independent=e1, variables=variables)
+    e1 + (-e2)
   }
 )
 
@@ -139,7 +137,9 @@ setMethod(
   "-", 
   signature(e1 = "VarElementClass"), 
   function(e1){
-    0 - e1
+    variables=numeric(e1@position)
+    variables[e1@position] = -1
+    VarExpression(independent=0, variables=variables)
   }
 )
 # -----------------------------------------------------------------------------

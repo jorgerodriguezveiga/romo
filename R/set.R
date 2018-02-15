@@ -43,9 +43,6 @@ SetClass <- setClass(
     if(length(object@name)==0){
       return("Argument 'name' is required.")
     }
-    if(length(object@elements)==0){
-      return("Argument 'elements' is required.")
-    }
     return(TRUE)
   }
 )
