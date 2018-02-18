@@ -71,107 +71,13 @@ VarElementClass <- setClass(
 # --------------------------------------------------------------------------- #
 
 
-# =============================================================================
-# Operations
-# =============================================================================
-
-# + ---------------------------------------------------------------------------
+# show ------------------------------------------------------------------------
 setMethod(
-  "+", 
-  signature(e1 = "numeric", e2 = "VarElementClass"), 
-  function(e1, e2){
-    variables=numeric(e2@position)
-    variables[e2@position] = 1
-    VarExpression(independent=e1, variables=variables)
+  "show", 
+  "VarElementClass",
+  function(object){
+    cat(object@name, "\n")
+    print(object@value)
   }
 )
-
-setMethod(
-  "+", 
-  signature(e1 = "VarElementClass", e2 = "numeric"), 
-  function(e1, e2){
-    e2 + e1
-  }
-)
-
-setMethod(
-  "+", 
-  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
-  function(e1, e2){
-    variables=numeric(max(e1@position, e2@position))
-    
-    variables[e1@position] = 1
-    variables[e2@position] = variables[e2@position] + 1
-    VarExpression(independent=0, variables=variables)
-  }
-)
-# -----------------------------------------------------------------------------
-
-
-# - ---------------------------------------------------------------------------
-setMethod(
-  "-",
-  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
-  function(e1, e2){
-    e1 + (-e2)
-  }
-)
-
-setMethod(
-  "-",
-  signature(e1 = "VarElementClass", e2 = "ANY"), 
-  function(e1, e2){
-    e1 + (-e2)
-  }
-)
-
-setMethod(
-  "-",
-  signature(e1 = "ANY", e2 = "VarElementClass"), 
-  function(e1, e2){
-    e1 + (-e2)
-  }
-)
-
-setMethod(
-  "-", 
-  signature(e1 = "VarElementClass"), 
-  function(e1){
-    variables=numeric(e1@position)
-    variables[e1@position] = -1
-    VarExpression(independent=0, variables=variables)
-  }
-)
-# -----------------------------------------------------------------------------
-
-
-# * ---------------------------------------------------------------------------
-setMethod(
-  "*", 
-  signature(e1 = "numeric", e2 = "VarElementClass"), 
-  function(e1, e2){
-    variables=numeric(e2@position)
-    variables[e2@position] = e1
-    VarExpression(independent=0, variables=variables)
-  }
-)
-
-setMethod(
-  "*", 
-  signature(e1 = "VarElementClass", e2 = "numeric"), 
-  function(e1, e2){
-    e2*e1
-  }
-)
-# -----------------------------------------------------------------------------
-
-
-# / ---------------------------------------------------------------------------
-setMethod(
-  "/", 
-  signature(e1 = "VarElementClass", e2 = "numeric"), 
-  function(e1, e2){
-    (1/e2)*e1
-  }
-)
-# -----------------------------------------------------------------------------
+# --------------------------------------------------------------------------- #

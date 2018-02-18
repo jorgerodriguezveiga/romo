@@ -44,17 +44,6 @@ AuxVarElementClass <- setClass(
 # --------------------------------------------------------------------------- #
 
 
-# show ------------------------------------------------------------------------
-setMethod(
-  "show", 
-  "VarElementClass",
-  function(object){
-    print(object@value)
-  }
-)
-# --------------------------------------------------------------------------- #
-
-
 # =============================================================================
 # Operations
 # =============================================================================
@@ -115,7 +104,8 @@ setMethod(
 
 # - ---------------------------------------------------------------------------
 #' Substrac element.
-#'
+#' 
+#' @param e2 numeric.
 #' @param e1 AuxVarElementClass. 
 #'
 #' @return
@@ -124,9 +114,26 @@ setMethod(
 #' @examples
 setMethod(
   "-", 
-  signature(e1 = "AuxVarElementClass"), 
-  function(e1){
-    0 - e1@expr
+  signature(e1 = "AuxVarElementClass", e2 = "AuxVarElementClass"), 
+  function(e1, e2){
+    e1@expr - e2@expr
+  }
+)
+
+#' Substrac element.
+#'
+#' @param e1 ANY.
+#' @param e2 AuxVarElementClass.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+setMethod(
+  "-", 
+  signature(e1 = "ANY", e2 = "AuxVarElementClass"), 
+  function(e1, e2){
+    e1 - e2@expr
   }
 )
 
@@ -143,38 +150,13 @@ setMethod(
   "-", 
   signature(e1 = "AuxVarElementClass", e2 = "ANY"), 
   function(e1, e2){
-    e1 + (-e2)
-  }
-)
-
-#' Substrac element.
-#' 
-#' @param e2 ANY.
-#' @param e1 AuxVarElementClass. 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-setMethod(
-  "-", 
-  signature(e1 = "ANY", e2 = "AuxVarElementClass"), 
-  function(e1, e2){
-    e1 + (-e2)
+    e1@expr - e2
   }
 )
 # -----------------------------------------------------------------------------
 
 
 # * ---------------------------------------------------------------------------
-setMethod(
-  "*", 
-  signature(e1 = "AuxVarElementClass", e2 = "AuxVarElementClass"), 
-  function(e1, e2){
-    e1@expr*e2@expr
-  }
-)
-
 setMethod(
   "*", 
   signature(e1 = "ANY", e2 = "AuxVarElementClass"), 
@@ -198,7 +180,7 @@ setMethod(
   "/", 
   signature(e1 = "AuxVarElementClass", e2 = "ANY"), 
   function(e1, e2){
-    e1*(1/e2)
+    e1@expr*(1/e2)
   }
 )
 # -----------------------------------------------------------------------------

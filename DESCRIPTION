@@ -12,10 +12,11 @@ RoxygenNote: 6.0.1
 Imports:
     lpSolveAPI
 Collate: 
-    'NewClasses.R'
     'VarElement.R'
-    'Var.R'
     'VarExpression.R'
+    'Addition.R'
+    'NewClasses.R'
+    'Var.R'
     'AuxVarElement.R'
     'AuxVar.R'
     'Set.R'
@@ -23,11 +24,17 @@ Collate:
     'ConstraintExpression.R'
     'ConstraintElement.R'
     'Constraint.R'
+    'Division.R'
+    'Expand.R'
     'Expression.R'
     'ListSets.R'
     'ModelInfo.R'
     'Model.R'
+    'Multiplication.R'
     'Objective.R'
     'Param.R'
     'ParamElement.R'
+    'Solve.R'
+    'Substract.R'
     'Sum.R'
+Suggests: testthat

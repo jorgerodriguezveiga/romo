@@ -30,6 +30,8 @@ Sum <- function(iterator, expr){
     sum_expr <- sum_expr + NoExpression(indexed_expr)
   }
   
+  sum_expr@expr = paste("(", sum_expr@expr, ")")
+  
   return(sum_expr)
 }
 # --------------------------------------------------------------------------- #

@@ -153,47 +153,42 @@ get_objects <- function(model){
   nobjs <- model@info@nobjs
   
   # Constraints
-  i_cons <- 0
-
-  A <- matrix(0, ncol=nvars, nrow = ncons)
-  sense <- c()
-  rhs <- c()
-
-  # Variables
-  i_vars <- 0
+  A         <- matrix(0, ncol=nvars, nrow = ncons)
+  sense     <- character(ncons)
+  rhs       <- numeric(nvars)
+  con_names <- character(ncons)
   
-  type <- c()
-  lb <- c()
-  ub <- c()
+  # Variables
+  type   <- character(nvars)
+  lb     <- numeric(nvars)
+  ub     <- numeric(nvars)
   
   for(o in model@objects){
     if(class(o)=="ConstraintClass"){
       for(c in o@constraint){
-        i_cons <- i_cons + 1
-        A[i_cons, ] <- c(c@expr@lhs, numeric(nvars-length(c@expr@lhs)))
-        sense <- c(sense, c@expr@sense)
-        rhs <- c(rhs, c@expr@rhs)
+        con_names[c@position] <- c@name
+        A[c@position, ]       <- c(c@expr@lhs, numeric(nvars-length(c@expr@lhs)))
+        sense[c@position]     <- c@expr@sense
+        rhs[c@position]       <- c@expr@rhs
       }
       
     }else if(class(o)=="ConstraintElementClass"){
-      i_cons <- i_cons + 1
-      A[i_cons, ] <- c(o@expr@lhs, numeric(nvars-length(o@expr@lhs)))
-      sense <- c(sense, o@expr@sense)
-      rhs <- c(rhs, o@expr@rhs)
+      con_names[o@position] <- o@name
+      A[o@position, ]       <- c(o@expr@lhs, numeric(nvars-length(o@expr@lhs)))
+      sense[o@position]     <- o@expr@sense
+      rhs[o@position]       <- o@expr@rhs
       
     }else if(class(o)=="VarClass"){
       for(v in o@variable){
-        i_vars <- i_vars + 1
-        type <- c(type, v@type)
-        lb <- c(lb, v@lb)
-        ub <- c(ub, v@ub)
+        type[v@position] <- v@type
+        lb[v@position]   <- v@lb
+        ub[v@position]   <- v@ub
       }
       
     }else if(class(o)=="VarElementClass"){
-      i_vars <- i_vars + 1
-      type <- c(type, o@type)
-      lb <- c(lb, o@lb)
-      ub <- c(ub, o@ub)
+      type[o@position] <- o@type
+      lb[o@position]   <- o@lb
+      ub[o@position]   <- o@ub
       
     }else if(class(o)=="ObjectiveClass"){
       obj <- c(o@expr@variables, numeric(nvars-length(o@expr@variables)))
@@ -208,61 +203,25 @@ get_objects <- function(model){
   # Constraints
   objects$constraints <- list()
   
-  objects$constraints$A <- matrix(unlist(A), ncol=nvars, byrow = T)
+  row.names(A) <- con_names
+  names(sense) <- con_names
+  names(rhs)   <- con_names
+  
+  objects$constraints$A <- A
   objects$constraints$sense <- sense
   objects$constraints$rhs <- rhs
   
   # Variables
-  objects$variables <- list()
+  objects$variables      <- list()
   objects$variables$type <- type
-  objects$variables$lb <- lb
-  objects$variables$ub <- ub
+  objects$variables$lb   <- lb
+  objects$variables$ub   <- ub
   
   # Objective
-  objects$objective <- list()
-  objects$objective$obj <- obj
+  objects$objective       <- list()
+  objects$objective$obj   <- obj
   objects$objective$sense <- obj_sense
   
   return(objects)
 }
 # --------------------------------------------------------------------------- #
-
-
-# solve -----------------------------------------------------------------------
-#' Solve model.
-#'
-#' @param model model of ModelClass class.
-#' @param solver solver name. Default to 'gurobi'.
-#' @param solver_options list with solver options. By default no options.
-#'
-#' @return
-#' @export
-#' @import gurobi
-#'
-#' @examples
-solve <- function(model, solver='gurobi', solver_options=list()){
-  objects <- get_objects(model)
-  
-  if(solver=="gurobi"){
-    gurobi_model  <- list()
-    
-    gurobi_model$lb <- objects$variables$lb
-    gurobi_model$ub <- objects$variables$ub  
-    gurobi_model$vtype  <- rep("C", model@info@nvars)
-    gurobi_model$vtype[objects$variables$type == "integer"] <- "I"
-    gurobi_model$vtype[objects$variables$type == "binary"]  <- "B"
-    
-    gurobi_model$A      <- objects$constraints$A
-    gurobi_model$sense  <- objects$constraints$sense
-    gurobi_model$sense[gurobi_model$sense == "=="] <- "="
-    gurobi_model$rhs    <- objects$constraints$rhs
-    
-    gurobi_model$obj        <- objects$objective$obj
-    gurobi_model$modelsense <- objects$objective$sense
-    
-    result <- gurobi(gurobi_model, solver_options)
-    
-    print(result$objval)
-    print(result$x)
-  }
-}

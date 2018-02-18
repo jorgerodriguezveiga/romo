@@ -8,9 +8,9 @@
 \S4method{-}{ANY,AuxVarElementClass}(e1, e2)
 }
 \arguments{
-\item{e1}{AuxVarElementClass.}
+\item{e1}{ANY.}
 
-\item{e2}{ANY.}
+\item{e2}{AuxVarElementClass.}
 }
 \description{
 Substrac element.

@@ -73,33 +73,6 @@ setMethod(
   }
 )
 
-#' Great or equal method to compare variable expressions and variable element.
-#'
-#' @param e1 VarExpressionClass. 
-#' @param e2 VarElementClass. 
-#'
-#' @include VarExpression.R
-#' @include VarElement.R
-#' @return
-#' @export
-#'
-#' @examples
-setMethod(
-  ">=", 
-  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
-  function(e1, e2){
-    e1 >= 1*e2
-  }
-)
-
-setMethod(
-  ">=", 
-  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
-  function(e1, e2){
-    1*e1 >= e2
-  }
-)
-
 setMethod(
   ">=", 
   signature(e1 = "VarExpressionClass", e2 = "numeric"), 
@@ -107,7 +80,6 @@ setMethod(
     e1 >= VarExpression() + e2
   }
 )
-
 
 setMethod(
   ">=", 
@@ -119,7 +91,41 @@ setMethod(
 
 setMethod(
   ">=", 
-  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
+  function(e1, e2){
+    e1 >= VarExpression() + e2
+  }
+)
+
+
+setMethod(
+  ">=", 
+  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
+  function(e1, e2){
+    VarExpression() + e1 >= e2
+  }
+)
+
+setMethod(
+  ">=", 
+  signature(e1 = "VarExpressionClass", e2 = "AuxVarElementClass"), 
+  function(e1, e2){
+    e1 >= VarExpression() + e2
+  }
+)
+
+
+setMethod(
+  ">=", 
+  signature(e1 = "AuxVarElementClass", e2 = "VarExpressionClass"), 
+  function(e1, e2){
+    VarExpression() + e1 >= e2
+  }
+)
+
+setMethod(
+  ">=", 
+  signature(e1 = "ANY", e2 = "VarElementClass"), 
   function(e1, e2){
     VarExpression() + e2 >= VarExpression() + e1
   }
@@ -127,7 +133,7 @@ setMethod(
 
 setMethod(
   ">=", 
-  signature(e1 = "VarElementClass", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "ANY"), 
   function(e1, e2){
     VarExpression() + e1 >= VarExpression() + e2
   }
@@ -135,7 +141,15 @@ setMethod(
 
 setMethod(
   ">=", 
-  signature(e1 = "numeric", e2 = "VarElementClass"), 
+  signature(e1 = "AuxVarElementClass", e2 = "ANY"), 
+  function(e1, e2){
+    VarExpression() + e1 >= VarExpression() + e2
+  }
+)
+
+setMethod(
+  ">=", 
+  signature(e1 = "ANY", e2 = "AuxVarElementClass"), 
   function(e1, e2){
     VarExpression() + e1 >= VarExpression() + e2
   }
@@ -157,28 +171,11 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
-  function(e1, e2){
-    e1 <= 1*e2
-  }
-)
-
-setMethod(
-  "<=", 
-  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
-  function(e1, e2){
-    1*e1 <= e2
-  }
-)
-
-setMethod(
-  "<=", 
   signature(e1 = "VarExpressionClass", e2 = "numeric"), 
   function(e1, e2){
     e1 <= VarExpression() + e2
   }
 )
-
 
 setMethod(
   "<=", 
@@ -190,7 +187,41 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
+  function(e1, e2){
+    e1 <= VarExpression() + e2
+  }
+)
+
+
+setMethod(
+  "<=", 
+  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
+  function(e1, e2){
+    VarExpression() + e1 <= e2
+  }
+)
+
+setMethod(
+  "<=", 
+  signature(e1 = "VarExpressionClass", e2 = "AuxVarElementClass"), 
+  function(e1, e2){
+    e1 <= VarExpression() + e2
+  }
+)
+
+
+setMethod(
+  "<=", 
+  signature(e1 = "AuxVarElementClass", e2 = "VarExpressionClass"), 
+  function(e1, e2){
+    VarExpression() + e1 <= e2
+  }
+)
+
+setMethod(
+  "<=", 
+  signature(e1 = "ANY", e2 = "VarElementClass"), 
   function(e1, e2){
     VarExpression() + e2 <= VarExpression() + e1
   }
@@ -198,7 +229,7 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = "VarElementClass", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "ANY"), 
   function(e1, e2){
     VarExpression() + e1 <= VarExpression() + e2
   }
@@ -206,7 +237,15 @@ setMethod(
 
 setMethod(
   "<=", 
-  signature(e1 = "numeric", e2 = "VarElementClass"), 
+  signature(e1 = "AuxVarElementClass", e2 = "ANY"), 
+  function(e1, e2){
+    VarExpression() + e1 <= VarExpression() + e2
+  }
+)
+
+setMethod(
+  "<=", 
+  signature(e1 = "ANY", e2 = "AuxVarElementClass"), 
   function(e1, e2){
     VarExpression() + e1 <= VarExpression() + e2
   }
@@ -228,28 +267,11 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
-  function(e1, e2){
-    e1 == 1*e2
-  }
-)
-
-setMethod(
-  "==", 
-  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
-  function(e1, e2){
-    1*e1 == e2
-  }
-)
-
-setMethod(
-  "==", 
   signature(e1 = "VarExpressionClass", e2 = "numeric"), 
   function(e1, e2){
     e1 == VarExpression() + e2
   }
 )
-
 
 setMethod(
   "==", 
@@ -261,7 +283,41 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
+  function(e1, e2){
+    e1 == VarExpression() + e2
+  }
+)
+
+
+setMethod(
+  "==", 
+  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
+  function(e1, e2){
+    VarExpression() + e1 == e2
+  }
+)
+
+setMethod(
+  "==", 
+  signature(e1 = "VarExpressionClass", e2 = "AuxVarElementClass"), 
+  function(e1, e2){
+    e1 == VarExpression() + e2
+  }
+)
+
+
+setMethod(
+  "==", 
+  signature(e1 = "AuxVarElementClass", e2 = "VarExpressionClass"), 
+  function(e1, e2){
+    VarExpression() + e1 == e2
+  }
+)
+
+setMethod(
+  "==", 
+  signature(e1 = "ANY", e2 = "VarElementClass"), 
   function(e1, e2){
     VarExpression() + e2 == VarExpression() + e1
   }
@@ -269,7 +325,7 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = "VarElementClass", e2 = "numeric"), 
+  signature(e1 = "VarElementClass", e2 = "ANY"), 
   function(e1, e2){
     VarExpression() + e1 == VarExpression() + e2
   }
@@ -277,7 +333,15 @@ setMethod(
 
 setMethod(
   "==", 
-  signature(e1 = "numeric", e2 = "VarElementClass"), 
+  signature(e1 = "AuxVarElementClass", e2 = "ANY"), 
+  function(e1, e2){
+    VarExpression() + e1 == VarExpression() + e2
+  }
+)
+
+setMethod(
+  "==", 
+  signature(e1 = "ANY", e2 = "AuxVarElementClass"), 
   function(e1, e2){
     VarExpression() + e1 == VarExpression() + e2
   }

@@ -14,7 +14,11 @@ m$T <- Set(name="T", elements = seq(1, m$np))
 m$T0 <- Set(name="T0", elements = as.character(seq(0, m$np)))
 
 # Corregir para que los sets puedan definirse sobre otros conjunto: SetExpression.
-m$G_I <- list("air"=c('air1', 'air2'))
+m$G_I <- function(g){
+  G_I = list("air"=c('air1', 'air2'))
+  return(Set(name="group", elements=G_I[[g]]))
+}
+
 
 # Define empty set
 m$T_int <- function(t1, t2){
@@ -65,11 +69,15 @@ m$nMin <- array(0,
 
 # Wildfire
 # ========
-m$PER <- c('1'=100, '2'=100, '3'=100, '4'=100, '5'=100, '6'=100, '7'=100, '8'=100, '9'=100, '10'=100)
+m$PER <- c('1'=100, '2'=50, '3'=50, '4'=50, '5'=50, '6'=50, '7'=50, '8'=50, '9'=50, '10'=100)
 m$NVC <- c('1'=1000, '2'=1000, '3'=1000, '4'=1000, '5'=1000, '6'=1000, '7'=1000, '8'=1000, '9'=1000, '10'=1000)
 m$EF <- array(1, 
               dim = c(length(m$I@elements), m$np), 
               dimnames = list(m$I@elements, m$T@elements))
+
+# =============================================================================
+# Model information 
+# =============================================================================
 
 # Auxiliar
 # ========
@@ -100,13 +108,16 @@ m$mu <- Var(name = "mu", sets = ListSets(m$G, m$T), type = "continuous", lb=0)
 m$u <- AuxVar(
   name="u", 
   iterator=Iter(i %inset% m$I, t %inset% m$T), 
-  expr = Sum(
-            iterator = Iter(t1 %inset% m$T_int(1,t)), 
-            expr = m$s[i, t1]
-            ) - Sum(
-            iterator = Iter(t2 %inset% m$T_int(1, as.numeric(t)-1)),
-            expr = m$e[i,t2]
-            )
+  expr = (
+      Sum(
+        iterator = Iter(t1 %inset% m$T_int(1,t)), 
+        expr = m$s[i, t1]
+      ) 
+      - Sum(
+        iterator = Iter(t2 %inset% m$T_int(1, as.numeric(t)-1)),
+        expr = m$e[i,t2]
+      )
+  )
 )
 
 m$w <- AuxVar(
@@ -133,17 +144,21 @@ m$z <- AuxVar(
 # -------------------
 m$Cost <- AuxVar(
   name="Cost",
-  expr = Sum(
-          iterator = Iter(i1 %inset% m$I, t1 %inset% m$T), 
-          expr = m$C[i1]*m$u[i1, t1]) + Sum(
-          iterator = Iter(i2 %inset% m$I), 
-          expr = m$P[i2]*m$z[i2]) + Sum(
-          iterator = Iter(t2 %inset% m$T), 
-          expr = m$NVC[t2]*m$y[as.numeric(t2)-1])
+  expr = (
+      Sum(
+        iterator = Iter(i1 %inset% m$I, t1 %inset% m$T), 
+        expr = m$C[i1]*m$u[i1, t1]) 
+      + Sum(
+        iterator = Iter(i2 %inset% m$I), 
+        expr = m$P[i2]*m$z[i2]) 
+      + Sum(
+        iterator = Iter(t2 %inset% m$T), 
+        expr = m$NVC[t2]*m$y[as.numeric(t2)-1])
+  )
 )
 
 m$Penalty <- AuxVar(
-  name="Cost",
+  name="Penalty",
   expr = Sum(
           iterator = Iter(g %inset% m$G, t %inset% m$T),
           expr = m$M_prime*m$mu[g, t]
@@ -167,123 +182,270 @@ m$Total_Cost <- Objective(
 # --------------------
 m$cont_1 <- Constraint(
   name = "cont_1",
-  expr = (Sum(
+  expr = (
+    Sum(
       iterator = Iter(t1 %inset% m$T), 
       expr = m$PER[t1]*m$y[as.numeric(t1)-1]) 
-   <= Sum(
+    <= 
+    Sum(
       iterator = Iter(i %inset% m$I, t2 %inset% m$T),
       expr = m$PR[i,t2]*m$w[i,t2]
-      ))
+    )
+  )
 )
 
-subject to cont_1:
-  sum{t in T} PER[t]*y[t-1] <= sum{i in I, t in T} PR[i,t]*w[i,t]
-;
-
-subject to cont_2 {t in T}:
-  sum{t1 in T_int[1,t]} PER[t1]*y[t-1] 
-<=
-  sum{i in I, t1 in T_int[1,t]} PR[i,t1]*w[i,t1] + M*y[t]
-;
+m$cont_2 <- Constraint(
+  name = "cont_2",
+  iterator = Iter(t %inset% m$T),
+  expr = (
+    Sum(
+      iterator = Iter(t1 %inset% m$T_int(1, t)), 
+      expr = m$PER[t1]*m$y[as.numeric(t)-1]) 
+    <= 
+    Sum(
+      iterator = Iter(i %inset% m$I, t2 %inset% m$T_int(1, t)),
+      expr = m$PR[i,t2]*m$w[i,t2]
+    ) 
+    + m$M*m$y[t]
+  )
+)
 
 
 # Start of activity
 # -----------------
-subject to start_act_1 {i in I, t in T}:
-  A[i]*w[i,t] <= sum{t1 in T_int[1,t]} fl[i,t1]
-;
+m$start_act_1 <- Constraint(
+  name = "start_act_1",
+  iterator = Iter(i %inset% m$I, t %inset% m$T),
+  expr = (
+    m$A[i]*m$w[i,t] <= 
+    Sum(
+      iterator=Iter(t1 %inset% m$T_int(1, t)), 
+      expr= m$fl[i, t1]
+    )
+  )
+)
 
-subject to start_act_2 {i in I}:
-  if ITW[i] == 1 then
-s[i,1] + sum{t in T_int[2,m]} (m+1)*s[i,t] - m*z[i]
-else
-  sum{t in T} s[i,t] - z[i]
-<= 0
-;
+m$start_act_2 <- Constraint(
+  name = "start_act_2",
+  iterator = Iter(i %inset% m$I),
+  expr = (if(m$ITW[i] == 1){
+    m$s[i,1] + Sum(iterator=Iter(t %inset% m$T), expr=(m$np+1)*m$s[i,t]) - m$np*m$z[i]
+  }else{
+    Sum(iterator=Iter(t %inset% m$T), expr=m$s[i,t]) - m$z[i]
+  } <= 0
+  )
+)
 
 
 # End of activity
 # ---------------
-subject to end_act {i in I, t in T}:
-  sum{t1 in T_int[max(1, min(m, t-FBRP[i]+1)),t]} fl[i,t1] >= FBRP[i]*e[i,t]
-;
-
+m$end_act <- Constraint(
+  name = "end_act",
+  iterator = Iter(i %inset% m$I, t %inset% m$T),
+  expr = (
+    Sum(
+      iterator=Iter(t1 %inset% m$T_int(1, as.numeric(t)-m$FBRP[i]+1)),
+      expr=m$fl[i,t1]  
+    ) 
+    >= 
+    m$FBRP[i]*m$e[i, t]
+  )
+)
 
 # Breaks
 # ------
 
 # Auxiliary variables
 # ···················
-var cr {i in I, t in T} = 
-  if (ITW[i] == 0) and (IOW[i] == 0) then
-+ sum{t1 in T_int[1,t]} (t+1-t1)*s[i,t1]
-- sum{t2 in T_int[1,t]} (t-t2)*e[i,t2]
-- sum{t3 in T_int[1,t]} r[i,t3]
-- sum{t4 in T_int[1,t]} FP[i]*er[i,t4]
-else
-  + (t+CFP[i]-CRP[i])*s[i,1]
-+ sum{t1 in T_int[2,t]} (t+1-t1+FP[i])*s[i,t1]
-- sum{t2 in T_int[1,t]} (t-t2)*e[i,t2]
-- sum{t3 in T_int[1,t]} r[i,t3]
-- sum{t4 in T_int[1,t]} FP[i]*er[i,t4]
-;
+m$cr <- AuxVar(
+  name="cr", 
+  iterator=Iter(i %inset% m$I, t %inset% m$T), 
+  expr = (
+    if(m$ITW[i] == 0 && m$IOW[i] == 0){
+      Sum(
+        iterator = Iter(t1 %inset% m$T_int(1, t)),
+        expr = ((as.numeric(t)+1-as.numeric(t1))*m$s[i, t1] 
+                - (as.numeric(t)-as.numeric(t1))*m$e[i,t1] 
+                - m$r[i,t1]
+                - m$FP[i]*m$er[i,t1]
+        )
+      )
+    }else{
+      (as.numeric(t)+m$CFP[i]-m$CRP[i])*m$s[i,1]
+      + Sum(
+        iterator = Iter(t1 %inset% m$T_int(2, t)),
+        expr = (as.numeric(t)+1-as.numeric(t1)+m$FP[i])*m$s[i,t1]
+      )
+      + Sum(
+        iterator = Iter(t2 %inset% m$T_int(1, t)),
+        expr = (
+               - (as.numeric(t)-as.numeric(t2))*m$e[i,t2] 
+               - m$r[i,t2]
+               - m$FP[i]*m$er[i,t2]
+        )
+      )
+    }
+  )
+)
 
 
 # Constraints
 # ···········
-subject to breaks_1 {i in I, t in T}:
-  0 <= cr[i,t] <= FP[i]
-;
+m$breaks_1_lb <- Constraint(
+  name = "breaks_1_lb",
+  iterator = Iter(i %inset% m$I, t %inset% m$T),
+  expr = 0 <= m$cr[i,t]
+)
 
-subject to break_2 {i in I, t in T}:
-  if t-RP[i] >= 0 then
-sum{t1 in T_int[max(1, t-RP[i]+1),t]} r[i,t1] 
-else
-  CRP[i]*s[i,1] + sum{t1 in T_int[1,t]} r[i,t1]
+m$breaks_1_ub <- Constraint(
+  name = "breaks_1_ub",
+  iterator = Iter(i %inset% m$I, t %inset% m$T),
+  expr = m$cr[i,t] <= m$FP[i]
+)
 
->= RP[i]*er[i,t]
-;
+m$break_2 <- Constraint(
+  name = "break_2",
+  iterator = Iter(i %inset% m$I, t %inset% m$T),
+  expr = (
+    if(as.numeric(t)-m$RP[i] >= 0){
+      Sum(
+        iterator = Iter(t1 %inset% m$T_int(as.numeric(t)-m$RP[i]+1,t)),
+        expr = m$r[i,t1]
+      ) >= m$RP[i]*m$er[i,t]
+    }else{
+      m$CRP[i]*m$s[i,1] + Sum(
+        iterator = Iter(t1 %inset% m$T_int(1,t)), 
+        expr = m$r[i,t1]
+      ) >= m$RP[i]*m$er[i,t]
+    } 
+  )
+)
 
-subject to break_3 {i in I, t in T}:
-  sum{t1 in T_int[max(1,t-FBRP[i]),min(m,t+FBRP[i])]} (r[i,t1]+fl[i,t1])
->= sum{t1 in T_int[max(1,t-FBRP[i]),min(m,t+FBRP[i])]} r[i,t]
-;
+m$break_3 <- Constraint(
+  name = "break_3",
+  iterator = Iter(i %inset% m$I, t %inset% m$T),
+  expr = (
+    Sum(
+      iterator=Iter(t1 %inset% m$T_int(as.numeric(t)-m$FBRP[i], as.numeric(t)+m$FBRP[i])),
+      expr = m$r[i,t1]+m$fl[i,t1]
+    )
+    >= 
+    Sum(
+      iterator=Iter(t1 %inset% m$T_int(as.numeric(t)-m$FBRP[i], as.numeric(t)+m$FBRP[i])),
+      expr = m$r[i,t]
+    )
+  )
+)
 
 # Maximum number of usage periods in a day
 # ----------------------------------------
-
-subject to max_num_usage {i in I}:
-  sum{t in T} u[i,t] <= DFP[i] - CTFP[i]
-;
+m$max_num_usage <- Constraint(
+  name = "max_num_usage",
+  iterator = Iter(i %inset% m$I),
+  expr = (
+    Sum(
+      iterator = Iter(t %inset% m$T),
+      expr = m$u[i,t]
+    )
+    <= m$DFP[i] - m$CTFP[i]
+  )
+)
 
 
 # Maximum and minimum number of resources of a group
 # --------------------------------------------------
+m$min_group <- Constraint(
+  name = "min_group",
+  iterator = Iter(g %inset% m$G, t %inset% m$T),
+  expr = (
+    m$nMin[g,t]*m$y[as.numeric(t)-1] <= Sum(
+      iterator = Iter(i %inset% m$G_I(g)),
+      expr = m$w[i,t] + m$mu[g,t]
+    )
+  )
+)
 
-subject to min_group {g in G, t in T}:
-  nMin[g,t]*y[t-1] <= sum{i in G_I[g]} w[i,t] + mu[g,t]
-;
-
-subject to max_group {g in G, t in T}:
-  sum{i in G_I[g]} w[i,t] <= nMax[g,t]*y[t-1]
-;
+m$max_group <- Constraint(
+  name = "max_group",
+  iterator = Iter(g %inset% m$G, t %inset% m$T),
+  expr = (
+    Sum(
+      iterator = Iter(i %inset% m$G_I(g)),
+      expr = m$w[i,t]
+    )
+    <= m$nMax[g,t]*m$y[as.numeric(t)-1] 
+  )
+)
 
 
 # Logical
 # -------
+m$logical_1 <- Constraint(
+  name = "logical_1",
+  iterator = Iter(i %inset% m$I),
+  expr = (
+    Sum(
+      iterator = Iter(t %inset% m$T),
+      expr = as.numeric(t)*m$e[i,t]
+    )
+    >= 
+    Sum(
+      iterator = Iter(t %inset% m$T),
+      as.numeric(t)*m$s[i,t]
+    )
+  )
+)
 
-subject to logical_1 {i in I}:
-  sum{t in T} t*e[i,t] >= sum{t in T} t*s[i,t]
-;
+m$logical_2 <- Constraint(
+  name = "logical_2",
+  iterator = Iter(i %inset% m$I),
+  expr = (
+    Sum(
+      iterator = Iter(t %inset% m$T),
+      expr = m$e[i,t]
+    )
+    <= 1
+  )
+)
 
-subject to logical_2 {i in I}:
-  sum{t in T} e[i,t] <= 1
-;
+m$logical_3 <- Constraint(
+  name = "logical_3",
+  iterator = Iter(i %inset% m$I, t %inset% m$T),
+  expr = (
+    m$r[i,t] + m$fl[i,t] <= m$u[i,t]
+  )
+)
 
-subject to logical_3 {i in I, t in T}:
-  r[i,t] + fl[i,t] <= u[i,t]
-;
+m$logical_4 <- Constraint(
+  name = "logical_4",
+  expr = (
+    m$y[0] == 1
+  )
+)
 
-subject to logical_4:
-  y[0] = 1
-;
+
+# =============================================================================
+# Solve model
+# =============================================================================
+
+results <- solve(m)
+m$y
+#sol <- results$x
+#
+#objects <- get_objects(m)
+#
+#num_cons <- m@info@ncons
+#
+#names <- rownames(objects$constraints$A)
+#lhs <- objects$constraints$A%*%sol
+#rhs <- objects$constraints$rhs
+#sense <- objects$constraints$sense
+#
+#for(i in seq(num_cons)){
+#  check_cons <- eval(parse(text=paste(lhs[i], sense[i], rhs[i])))
+#  cat(paste("Constraint: ", names[i], "\n", sep=""))
+#  cat(paste(check_cons, ":  ",
+#            "( ", lhs[i], " ", sense[i], " ", rhs[i], " )", "\n\n", sep=""))
+#}
+
+
