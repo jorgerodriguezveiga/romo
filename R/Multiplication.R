@@ -19,6 +19,24 @@ setMethod(
   }
 )
 
+# VarElement VarExpression
+setMethod(
+  "*", 
+  signature(e1 = "VarElement", e2 = "VarExpressionClass"), 
+  function(e1, e2){
+    (1*e1)*(1*e2)
+  }
+)
+
+# VarExpression VarElement
+setMethod(
+  "*", 
+  signature(e1 = "VarExpressionClass", e2 = "VarElement"), 
+  function(e1, e2){
+    e2 * e1
+  }
+)
+
 # numeric VarExpression
 setMethod(
   "*", 

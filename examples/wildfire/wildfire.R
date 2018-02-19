@@ -271,12 +271,10 @@ m$cr <- AuxVar(
         )
       )
     }else{
-      (as.numeric(t)+m$CFP[i]-m$CRP[i])*m$s[i,1]
-      + Sum(
+      (as.numeric(t)+m$CFP[i]-m$CRP[i])*m$s[i,1] + Sum(
         iterator = Iter(t1 %inset% m$T_int(2, t)),
         expr = (as.numeric(t)+1-as.numeric(t1)+m$FP[i])*m$s[i,t1]
-      )
-      + Sum(
+      ) + Sum(
         iterator = Iter(t2 %inset% m$T_int(1, t)),
         expr = (
                - (as.numeric(t)-as.numeric(t2))*m$e[i,t2] 

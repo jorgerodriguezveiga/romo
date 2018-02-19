@@ -2044,3 +2044,48 @@ Solution count 6: 4300 4400 4600 ... 8700
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 4.300000000000e+03, best bound 4.300000000000e+03, gap 0.0000%
+
+Gurobi 7.5.2 (win64) logging started 02/19/18 21:14:00
+
+Academic license - for non-commercial use only
+Warning for adding variables: zero or small (< 1e-13) coefficients, ignored
+Optimize a model with 180 rows, 121 columns and 2907 nonzeros
+Variable types: 10 continuous, 111 integer (111 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 3e+03]
+  Objective range  [1e+00, 1e+06]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 5e+01]
+Presolve removed 24 rows and 13 columns
+Presolve time: 0.02s
+Presolved: 156 rows, 108 columns, 2593 nonzeros
+Variable types: 0 continuous, 108 integer (99 binary)
+
+Root relaxation: objective 3.109992e+03, 42 iterations, 0.00 seconds
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 3109.99213    0   20          - 3109.99213      -     -    0s
+H    0     0                    8700.0000000 3109.99213  64.3%     -    0s
+H    0     0                    7400.0000000 3109.99213  58.0%     -    0s
+H    0     0                    7000.0000000 3109.99213  55.6%     -    0s
+H    0     0                    4600.0000000 3109.99213  32.4%     -    0s
+H    0     0                    4400.0000000 3109.99213  29.3%     -    0s
+H    0     0                    4300.0000000 3109.99213  27.7%     -    0s
+     0     0 4164.74886    0   22 4300.00000 4164.74886  3.15%     -    0s
+     0     0     cutoff    0      4300.00000 4300.00000  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 3
+  Cover: 4
+  Clique: 1
+  StrongCG: 2
+
+Explored 1 nodes (83 simplex iterations) in 0.06 seconds
+Thread count was 8 (of 8 available processors)
+
+Solution count 6: 4300 4400 4600 ... 8700
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 4.300000000000e+03, best bound 4.300000000000e+03, gap 0.0000%
