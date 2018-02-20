@@ -55,7 +55,7 @@ m$FBRP <- c('air1'=1, 'air2'=1)
 m$FP <- c('air1'=12, 'air2'=12)
 m$RP <- c('air1'=4, 'air2'=4)
 m$DFP <- c('air1'=48, 'air2'=48)
-m$ITW <- c('air1'=0, 'air2'=0)
+m$ITW <- c('air1'=1, 'air2'=0)
 m$IOW <- c('air1'=0, 'air2'=0)
 
 # Groups
@@ -229,10 +229,10 @@ m$start_act_2 <- Constraint(
   name = "start_act_2",
   iterator = Iter(i %inset% m$I),
   expr = (if(m$ITW[i] == 1){
-    m$s[i,1] + Sum(iterator=Iter(t %inset% m$T), expr=(m$np+1)*m$s[i,t]) - m$np*m$z[i]
+    m$s[i,1] + Sum(iterator=Iter(t %inset% m$T), expr=(m$np+1)*m$s[i,t]) - m$np*m$z[i] <= 0
   }else{
-    Sum(iterator=Iter(t %inset% m$T), expr=m$s[i,t]) - m$z[i]
-  } <= 0
+    Sum(iterator=Iter(t %inset% m$T), expr=m$s[i,t]) - m$z[i] <= 0
+  } 
   )
 )
 
@@ -271,17 +271,13 @@ m$cr <- AuxVar(
         )
       )
     }else{
-      (as.numeric(t)+m$CFP[i]-m$CRP[i])*m$s[i,1] + Sum(
+      Sum(
         iterator = Iter(t1 %inset% m$T_int(2, t)),
-        expr = (as.numeric(t)+1-as.numeric(t1)+m$FP[i])*m$s[i,t1]
+        expr = ((as.numeric(t)+1-as.numeric(t1)+m$FP[i])*m$s[i,t1])
       ) + Sum(
         iterator = Iter(t2 %inset% m$T_int(1, t)),
-        expr = (
-               - (as.numeric(t)-as.numeric(t2))*m$e[i,t2] 
-               - m$r[i,t2]
-               - m$FP[i]*m$er[i,t2]
-        )
-      )
+        expr = -(as.numeric(t)-as.numeric(t2))*m$e[i,t2] - m$r[i,t2] - m$FP[i]*m$er[i,t2]
+      ) + ((as.numeric(t)+m$CFP[i]-m$CRP[i])*m$s[i,1])
     }
   )
 )

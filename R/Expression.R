@@ -11,7 +11,7 @@
 #' @examples
 Expression <- function(expr){
   return(
-    ExpressionClass(expr=deparse(substitute(expr)))
+    ExpressionClass(expr=deparse(substitute(expr), width.cutoff = 500L))
   )
 }
 # --------------------------------------------------------------------------- #

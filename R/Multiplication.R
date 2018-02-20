@@ -22,16 +22,27 @@ setMethod(
 # VarElement VarExpression
 setMethod(
   "*", 
-  signature(e1 = "VarElement", e2 = "VarExpressionClass"), 
+  signature(e1 = "VarElementClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     (1*e1)*(1*e2)
   }
 )
 
 # VarExpression VarElement
+#' Title
+#'
+#' @param e1 VarExpressionClass. 
+#' @param e2 VarElementClass. 
+#' 
+#' @include VarElement.R
+#' @include VarExpression.R
+#' @return
+#' @export
+#'
+#' @examples
 setMethod(
   "*", 
-  signature(e1 = "VarExpressionClass", e2 = "VarElement"), 
+  signature(e1 = "VarExpressionClass", e2 = "VarElementClass"), 
   function(e1, e2){
     e2 * e1
   }
