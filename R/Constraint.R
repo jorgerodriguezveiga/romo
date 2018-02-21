@@ -16,7 +16,7 @@
 #' @return Object of ConstraintClass or ConstraintElementClass class .
 #' @export Constraint
 #' 
-#' @include ConstraintElement.R
+#' @include constraint_element.R
 #' 
 #' @examples 
 #' D <- Var("D")
@@ -75,8 +75,8 @@ Constraint <- function(name, expr, iterator=list(), description=""){
 #' @slot constraint list. 
 #' @slot description character. 
 #'
-#' @include NewClasses.R
-#' @include Iterator.R
+#' @include new_classes.R
+#' @include iterator.R
 #' @return Object of ConstraintClass class.
 #' @export
 #'

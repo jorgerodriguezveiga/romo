@@ -8,8 +8,8 @@
 #' @param start_position starting point to enumerate the set of variables.
 #' @param description variable description.
 #'
-#' @include AuxVarElement.R
-#' @include Var.R
+#' @include aux_var_element.R
+#' @include var.R
 #' @return
 #' @export
 #'
@@ -78,7 +78,7 @@ AuxVar <- function(name, expr, iterator=list(), description=""){
 #' @slot variable list. 
 #' @slot description character. 
 #'
-#' @include NewClasses.R
+#' @include new_classes.R
 #' @return
 #' @export
 #'

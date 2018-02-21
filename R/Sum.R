@@ -4,7 +4,7 @@
 #'
 #' @param ... list of iterators.
 #' 
-#' @include Expression.R
+#' @include expression.R
 #' @return
 #' @export
 #'
@@ -48,7 +48,7 @@ Sum <- function(iterator, expr){
 #' @slot i ANY. 
 #' @slot set SetClass. 
 #' 
-#' @include Set.R
+#' @include set.R
 #' @return
 #' @export
 #'

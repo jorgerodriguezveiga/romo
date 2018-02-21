@@ -13,7 +13,7 @@
 #' @param type variable type.
 #' @param description variable description.
 #' 
-#' @include VarElement.R
+#' @include var_element.R
 #' @return
 #' @export
 #'
@@ -65,7 +65,7 @@ Var <- function(name, sets=list(), start_position=1, value=NaN, lb=-Inf, ub=Inf,
 #' @slot variable list. 
 #' @slot description character. 
 #'
-#' @include NewClasses.R
+#' @include new_classes.R
 #' @return
 #' @export
 #'

@@ -51,7 +51,7 @@ Param <- function(name, value, sets=list(), description=""){
 #' @slot value arrayORnumeric. 
 #' @slot description character. 
 #'
-#' @include NewClasses.R
+#' @include new_classes.R
 #' @return
 #' @export
 #'

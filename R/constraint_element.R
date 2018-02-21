@@ -42,7 +42,7 @@ ConstraintElement <- function(name, expr, position=1, state="active",
 #' @slot state character. 
 #' @slot description character. 
 #'
-#' @include ConstraintExpression.R
+#' @include constraint_expression.R
 #' @return object of the ConstraintElementClass class.
 #' @export
 ConstraintElementClass <- setClass(

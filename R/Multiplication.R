@@ -34,8 +34,8 @@ setMethod(
 #' @param e1 VarExpressionClass. 
 #' @param e2 VarElementClass. 
 #' 
-#' @include VarElement.R
-#' @include VarExpression.R
+#' @include var_element.R
+#' @include var_expression.R
 #' @return
 #' @export
 #'

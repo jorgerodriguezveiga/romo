@@ -36,7 +36,7 @@ Objective <- function(name, sense, expr, state="active", description=""){
 #' @slot state objective state.  Possibilities c("active", "deactive").
 #' @slot description objective function description.
 #'
-#' @include VarExpression.R
+#' @include var_expression.R
 #' @return
 #' @export
 #'

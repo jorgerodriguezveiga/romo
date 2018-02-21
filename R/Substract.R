@@ -5,7 +5,7 @@
 #' @param e1 missing. 
 #' @param e2 VarExpressionClass. 
 #'
-#' @include VarExpression.R
+#' @include var_expression.R
 #' @return
 #' @export
 #'
@@ -40,7 +40,7 @@ setMethod(
 #' @param e1 VarExpressionClass. 
 #' @param e2 VarExpressionClass. 
 #'
-#' @include VarExpression.R
+#' @include var_expression.R
 #' @return
 #' @export
 #'
@@ -66,7 +66,7 @@ setMethod(
 #' @param e1 numeric. 
 #' @param e2 VarElementClass. 
 #'
-#' @include VarElement.R
+#' @include var_element.R
 #' @return
 #' @export
 #'
@@ -87,7 +87,7 @@ setMethod(
 #' @param e1 ANY. 
 #' @param e2 VarElementClass. 
 #'
-#' @include VarElement.R
+#' @include var_element.R
 #' @return
 #' @export
 #'
@@ -106,7 +106,7 @@ setMethod(
 #' @param e1 VarElementClass. 
 #' @param e2 ANY.
 #'
-#' @include VarElement.R
+#' @include var_element.R
 #' @return
 #' @export
 #'
@@ -125,7 +125,7 @@ setMethod(
 #' @param e1 numeric. 
 #' @param e2 VarExpressionClass. 
 #'
-#' @include VarExpression.R
+#' @include var_expression.R
 #' @return
 #' @export
 #'
@@ -144,7 +144,7 @@ setMethod(
 #' @param e1 ANY. 
 #' @param e2 VarExpressionClass. 
 #'
-#' @include VarExpression.R
+#' @include var_expression.R
 #' @return
 #' @export
 #'
@@ -163,7 +163,7 @@ setMethod(
 #' @param e1 VarExpressionClass. 
 #' @param e2 ANY. 
 #'
-#' @include VarExpression.R
+#' @include var_expression.R
 #' @return
 #' @export
 #'

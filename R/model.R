@@ -26,7 +26,7 @@ Model <- function(){
 #' @return
 #' @export
 #' 
-#' @include ModelInfo.R
+#' @include model_info.R
 #'
 #' @examples
 ModelClass <- setClass(

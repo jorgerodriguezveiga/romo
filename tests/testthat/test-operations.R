@@ -1,8 +1,12 @@
 context("Test '+' operation.")
 
 
-expect_equal(as.numeric('1') + m$CFP['air1'] - m$CRP['air1'] + m$s['air1',1] + NoExpression("0"),
-             )
+expect_equal(
+  m$CFP['air1']+m$CRP['air1']+as.numeric('1')+m$s['air1',1]+NoExpression("0")
+  m$CFP['air1']+m$CRP['air1']+m$CRP['air1']+as.numeric('1')+-><-m$s['air1',1]+NoExpression("0")
+  m$CFP['air1']+m$CRP['air1']+m$CRP['air1']+m$CRP['air1']+-><-as.numeric('1')+m$s['air1',1]+NoExpression("0"),
+  NoExpression("as.numeric(\"1\") + m$CFP[\"air1\"] - m$CRP[\"air1\"] + m$s[\"air1\", 1] + 0")
+)
 
 
 test_that("Addition operation ('+') is well constructed", {

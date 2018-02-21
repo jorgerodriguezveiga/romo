@@ -57,7 +57,7 @@ ConstraintExpressionClass <- setClass(
 #' @param e1 VarExpressionClass.
 #' @param e2 VarExpressionClass.
 #'
-#' @include VarExpression.R
+#' @include var_expression.R
 #' @return
 #' @export
 #'

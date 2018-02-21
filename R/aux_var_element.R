@@ -20,7 +20,7 @@ AuxVarElement <- function(name, expr, description=""){
 #' @slot expr VarExpressionClass.
 #' @slot description character. 
 #' 
-#' @include VarExpression.R
+#' @include var_expression.R
 #' @return
 #' @export
 #'

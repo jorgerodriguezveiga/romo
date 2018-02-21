@@ -57,7 +57,7 @@ For <- function(...){
 #' @slot i ANY. 
 #' @slot set SetClass. 
 #' 
-#' @include Set.R
+#' @include set.R
 #' @return
 #' @export
 #'
