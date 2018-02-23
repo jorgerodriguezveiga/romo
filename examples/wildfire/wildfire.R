@@ -46,7 +46,7 @@ m$T_int <- function(t1, t2){
 # =========
 m$C <- c('air1'=100, 'air2'=150)
 m$P <- c('air1'=1000, 'air2'=1500)
-m$BPR <- c('air1'=100, 'air2'=150)
+m$BPR <- c('air1'=50, 'air2'=50)
 m$A <- c('air1'=1, 'air2'=2)
 m$CFP <- c('air1'=0, 'air2'=0)
 m$CRP <- c('air1'=0, 'air2'=0)
@@ -69,8 +69,8 @@ m$nMin <- array(0,
 
 # Wildfire
 # ========
-m$PER <- c('1'=100, '2'=50, '3'=50, '4'=50, '5'=50, '6'=50, '7'=50, '8'=50, '9'=50, '10'=100)
-m$NVC <- c('1'=1000, '2'=1000, '3'=1000, '4'=1000, '5'=1000, '6'=1000, '7'=1000, '8'=1000, '9'=1000, '10'=1000)
+m$PER <- c(200, 50, 50, 50, 50, 50, 50, 50, 50, 100)
+m$NVC <- c(1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000)
 m$EF <- array(1, 
               dim = c(length(m$I@elements), m$np), 
               dimnames = list(m$I@elements, m$T@elements))
@@ -271,13 +271,13 @@ m$cr <- AuxVar(
         )
       )
     }else{
-      Sum(
+      ((as.numeric(t)+m$CFP[i]-m$CRP[i])*m$s[i,1]) + Sum(
         iterator = Iter(t1 %inset% m$T_int(2, t)),
         expr = ((as.numeric(t)+1-as.numeric(t1)+m$FP[i])*m$s[i,t1])
       ) + Sum(
         iterator = Iter(t2 %inset% m$T_int(1, t)),
         expr = -(as.numeric(t)-as.numeric(t2))*m$e[i,t2] - m$r[i,t2] - m$FP[i]*m$er[i,t2]
-      ) + ((as.numeric(t)+m$CFP[i]-m$CRP[i])*m$s[i,1])
+      )
     }
   )
 )
@@ -423,7 +423,18 @@ m$logical_4 <- Constraint(
 # =============================================================================
 
 results <- solve(m)
+
+m$s
+m$fl
+m$r
+m$er
+m$e
+
+# Wildfire
+# ========
 m$y
+m$mu
+
 #sol <- results$x
 #
 #objects <- get_objects(m)

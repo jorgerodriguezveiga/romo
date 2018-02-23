@@ -79,8 +79,12 @@ get_indexed_expr <- function(string, iterator, i, ind){
   count <- 0
   for(s in iterator){
     count <- count + 1
-    splited_expr[splited_expr==s@i] <- paste('', as.vector(ind[i,count]), '', 
-                                             sep="'")
+    i_value <- as.vector(ind[i, count])
+    if(is.character(s@set@elements)){
+      splited_expr[splited_expr==s@i] <- paste('', i_value, '', sep="'")
+    }else{
+      splited_expr[splited_expr==s@i] <- i_value
+    }
   }
   
   return(paste(splited_expr, collapse=""))
@@ -105,7 +109,7 @@ setMethod(
   "+", 
   signature(e1 = "ExpressionClass", e2 = "ANY"), 
   function(e1, e2){
-    ExpressionClass(expr=paste(e1@expr, deparse(substitute(e2)), sep = " + "))
+    e1 + NoExpression(paste(deparse(substitute(e2)), collapse=""))
   }
 )
 
@@ -113,7 +117,7 @@ setMethod(
   "+", 
   signature(e1 = "ANY", e2 = "ExpressionClass"), 
   function(e1, e2){
-    ExpressionClass(expr=paste(deparse(substitute(e1)), e2@expr, sep = " + "))
+    NoExpression(paste(deparse(substitute(e1)), collapse="")) + e2
   }
 )
 # -----------------------------------------------------------------------------

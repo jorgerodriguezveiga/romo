@@ -26,7 +26,6 @@ Sum <- function(iterator, expr){
     constr <- list()
     position = array(dim=dimension(sets), dimnames=dimensionnames(sets))
     for(i in rownames(ind)){
-      print(i)
       string <- eval(as.character(expr))
       indexed_expr <- get_indexed_expr(string, iterator, i, ind)
       sum_expr <- sum_expr + NoExpression(indexed_expr)
