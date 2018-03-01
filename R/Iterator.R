@@ -40,7 +40,8 @@ For <- function(...){
 #'
 #' @param i element name.
 #' @param s SetClass.
-#'
+#' 
+#' @include set.R
 #' @return
 #' @export
 #'

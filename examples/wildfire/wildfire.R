@@ -6,7 +6,7 @@ m <- Model()
 # Sets
 # =============================================================================
 
-m$np <- 10
+m$np <- 12
 
 m$I <- Set(name="I", elements = c('air1', 'air2'))
 m$G <- Set(name="G", elements = c('air'))
@@ -26,7 +26,7 @@ m$T_int <- function(t1, t2){
   t2 <- as.numeric(t2)
   if(t1<=t2){
     return(Set(name="T_int", 
-               elements=as.character(max(1, as.numeric(t1)):min(m$np, as.numeric(t2)))
+               elements=max(1, as.numeric(t1)):min(m$np, as.numeric(t2))
     )
     )
   }else{
@@ -46,9 +46,9 @@ m$T_int <- function(t1, t2){
 # =========
 m$C <- c('air1'=100, 'air2'=150)
 m$P <- c('air1'=1000, 'air2'=1500)
-m$BPR <- c('air1'=50, 'air2'=50)
+m$BPR <- c('air1'=80, 'air2'=80)
 m$A <- c('air1'=1, 'air2'=2)
-m$CFP <- c('air1'=0, 'air2'=0)
+m$CFP <- c('air1'=11, 'air2'=0)
 m$CRP <- c('air1'=0, 'air2'=0)
 m$CTFP <- c('air1'=0, 'air2'=0)
 m$FBRP <- c('air1'=1, 'air2'=1)
@@ -69,8 +69,8 @@ m$nMin <- array(0,
 
 # Wildfire
 # ========
-m$PER <- c(200, 50, 50, 50, 50, 50, 50, 50, 50, 100)
-m$NVC <- c(1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000)
+m$PER <- c(150, 100, 50, 50, 50 , 50, 50, 50, 50, 50 , 50, 50)
+m$NVC <- c(1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000)
 m$EF <- array(1, 
               dim = c(length(m$I@elements), m$np), 
               dimnames = list(m$I@elements, m$T@elements))
@@ -200,9 +200,8 @@ m$cont_2 <- Constraint(
   expr = (
     Sum(
       iterator = Iter(t1 %inset% m$T_int(1, t)), 
-      expr = m$PER[t1]*m$y[as.numeric(t)-1]) 
-    <= 
-    Sum(
+      expr = m$PER[t1]*m$y[as.numeric(t)-1]
+    ) <= Sum(
       iterator = Iter(i %inset% m$I, t2 %inset% m$T_int(1, t)),
       expr = m$PR[i,t2]*m$w[i,t2]
     ) 
@@ -229,7 +228,7 @@ m$start_act_2 <- Constraint(
   name = "start_act_2",
   iterator = Iter(i %inset% m$I),
   expr = (if(m$ITW[i] == 1){
-    m$s[i,1] + Sum(iterator=Iter(t %inset% m$T), expr=(m$np+1)*m$s[i,t]) - m$np*m$z[i] <= 0
+    m$s[i,1] + Sum(iterator=Iter(t %inset% m$T_int(2, m$np)), expr=(m$np+1)*m$s[i,t]) - m$np*m$z[i] <= 0
   }else{
     Sum(iterator=Iter(t %inset% m$T), expr=m$s[i,t]) - m$z[i] <= 0
   } 
@@ -422,7 +421,7 @@ m$logical_4 <- Constraint(
 # Solve model
 # =============================================================================
 
-results <- solve(m)
+results <- Solve(m)
 
 m$s
 m$fl
@@ -435,22 +434,82 @@ m$e
 m$y
 m$mu
 
-#sol <- results$x
-#
-#objects <- get_objects(m)
-#
-#num_cons <- m@info@ncons
-#
-#names <- rownames(objects$constraints$A)
-#lhs <- objects$constraints$A%*%sol
-#rhs <- objects$constraints$rhs
-#sense <- objects$constraints$sense
-#
-#for(i in seq(num_cons)){
-#  check_cons <- eval(parse(text=paste(lhs[i], sense[i], rhs[i])))
-#  cat(paste("Constraint: ", names[i], "\n", sep=""))
-#  cat(paste(check_cons, ":  ",
-#            "( ", lhs[i], " ", sense[i], " ", rhs[i], " )", "\n\n", sep=""))
-#}
+objects <- get_objects(m)
+sol <- objects$variables$value
+num_cons <- m@info@ncons
+
+schedule <- matrix(0, ncol=m$np, nrow=length(m$I@elements))
+row.names(schedule) <- m$I@elements
+colnames(schedule) <- m$T@elements
+for(i in m$I@elements){
+  for(t in m$T@elements){
+    lenw <- length(m$w[i, t]@expr@variables)
+    lenu <- length(m$u[i, t]@expr@variables)
+    if(sum(m$u[i, t]@expr@variables*sol[1:lenu])==1){
+      schedule[i, t] <- 'u'
+    }
+    if(sum(m$w[i, t]@expr@variables*sol[1:lenw])==1){
+      if(schedule[i, t] == 0){
+        schedule[i, t] <- 'w'
+      }else{
+        schedule[i, t] <- paste(schedule[i, t], 'w')
+      }
+    }
+    if(m$fl[i, t]@value == 1){
+      if(schedule[i, t] == 0){
+        schedule[i, t] <- 'fl'
+      }else{
+        schedule[i, t] <- paste(schedule[i, t], 'fl')
+      }
+    }
+    if(m$r[i, t]@value == 1){
+      if(schedule[i, t] == 0){
+        schedule[i, t] <- 'r'
+      }else{
+        schedule[i, t] <- paste(schedule[i, t], 'r')
+      }
+    }
+    if(m$er[i, t]@value == 1){
+      if(schedule[i, t] == 0){
+        schedule[i, t] <- 'er'
+      }else{
+        schedule[i, t] <- paste(schedule[i, t], 'er')
+      }
+    }
+  }
+}
 
 
+
+
+sol <- c(1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, # s
+         1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,
+         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,
+         1,1,1,1,1,1,1,1,1,1,1,1,0,
+         0,0,0,0,0,0,0,0,0,0,0,0)
+
+
+names <- rownames(objects$constraints$A)
+lhs <- objects$constraints$A%*%sol
+rhs <- objects$constraints$rhs
+sense <- objects$constraints$sense
+
+for(i in seq(num_cons)){
+  check_cons <- eval(parse(text=paste(lhs[i], sense[i], rhs[i])))
+  cat(paste("Constraint: ", names[i], "\n", sep=""))
+  cat(paste(check_cons, ":  ",
+            "( ", lhs[i], " ", sense[i], " ", rhs[i], " )", "\n\n", sep=""))
+}
+
+
+for(o in m$w@variable){
+  len = length(o@expr@variables)
+  print(paste(o@name, ": ", sum(o@expr@variables*sol[1:len]), sep=""))
+}
+
+for(o in m$u@variable){
+  len = length(o@expr@variables)
+  print(paste(o@name, ": ", paste(o@expr@variables*sol[1:len], collapse=" "), sep=""))
+}

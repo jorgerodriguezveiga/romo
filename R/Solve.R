@@ -1,5 +1,5 @@
 
-# solve -----------------------------------------------------------------------
+# Solve -----------------------------------------------------------------------
 #' Solve model.
 #'
 #' @param model model of ModelClass class.
@@ -11,7 +11,7 @@
 #' @import gurobi
 #'
 #' @examples
-solve <- function(model, solver='gurobi', solver_options=list()){
+Solve <- function(model, solver='gurobi', solver_options=list()){
   nameObject <- deparse(substitute(model))
   
   objects <- get_objects(model)
@@ -46,21 +46,25 @@ solve <- function(model, solver='gurobi', solver_options=list()){
     )
   }
   
-  for(o in model@objects){
-    if(class(o)=="VarClass"){
-      n_vars <- length(o@variable)
-      for(v in seq(n_vars)){
-        value <- vars[model@objects[[o@name]]@variable[[v]]@position]
-        model@objects[[o@name]]@variable[[v]]@value <- value
+  if(solver_info$status == "INFEASIBLE"){
+    return(solver_info)
+  }else{
+    for(o in model@objects){
+      if(class(o)=="VarClass"){
+        n_vars <- length(o@variable)
+        for(v in seq(n_vars)){
+          value <- vars[model@objects[[o@name]]@variable[[v]]@position]
+          model@objects[[o@name]]@variable[[v]]@value <- value
+        }
+      }else if(class(o)=="VarElementClass"){
+        value <- vars[model@objects[[o@name]]@position]
+        model@objects[[o@name]]@value <- value
       }
-    }else if(class(o)=="VarElementClass"){
-      value <- vars[model@objects[[o@name]]@position]
-      model@objects[[o@name]]@value <- value
     }
+    
+    # Change model in parent frame
+    assign(nameObject, model, pos=parent.frame())
+    #invisible(NULL)
+    return(solver_info)
   }
-  
-  # Change model in parent frame
-  assign(nameObject, model, pos=parent.frame())
-  #invisible(NULL)
-  return(solver_info)
 }

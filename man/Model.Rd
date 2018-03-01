@@ -9,3 +9,6 @@ Model()
 \description{
 Initialize model object.
 }
+\note{
+Work with envioronments to simplify notation of constraints and to avoid the use of eval.parent
+}

@@ -2,9 +2,9 @@
 
 # AuxVarElement ---------------------------------------------------------------
 AuxVarElement <- function(name, expr, description=""){
-  eval_expr <- eval(expr)
+  eval_expr <- eval.parent(expr, n=2)
   if(class(eval_expr)=="ExpressionClass"){
-    eval_expr <- eval(parse(text=eval_expr@expr))
+    eval_expr <- eval.parent(parse(text=eval_expr@expr), n=2)
   }
   return(AuxVarElementClass(name=name, expr=eval_expr, description=description))
 }

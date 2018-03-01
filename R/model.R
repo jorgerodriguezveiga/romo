@@ -6,6 +6,8 @@
 #' @export
 #'
 #' @examples
+#' @note Work with envioronments to simplify notation of constraints and to avoid the use of eval.parent
+#' 
 Model <- function(){
   return(
     ModelClass(
@@ -159,9 +161,11 @@ get_objects <- function(model){
   con_names <- character(ncons)
   
   # Variables
-  type   <- character(nvars)
-  lb     <- numeric(nvars)
-  ub     <- numeric(nvars)
+  var_names <- character(nvars)
+  type      <- character(nvars)
+  value     <- numeric(nvars)
+  lb        <- numeric(nvars)
+  ub        <- numeric(nvars)
   
   for(o in model@objects){
     if(class(o)=="ConstraintClass"){
@@ -180,13 +184,17 @@ get_objects <- function(model){
       
     }else if(class(o)=="VarClass"){
       for(v in o@variable){
+        var_names[v@position] <- v@name
         type[v@position] <- v@type
+        value[v@position] <- v@value
         lb[v@position]   <- v@lb
         ub[v@position]   <- v@ub
       }
       
     }else if(class(o)=="VarElementClass"){
+      var_names[o@position] <- o@name
       type[o@position] <- o@type
+      value[o@position]   <- o@value
       lb[o@position]   <- o@lb
       ub[o@position]   <- o@ub
       
@@ -202,7 +210,7 @@ get_objects <- function(model){
   
   # Constraints
   objects$constraints <- list()
-  
+  colnames(A) <- var_names
   row.names(A) <- con_names
   names(sense) <- con_names
   names(rhs)   <- con_names
@@ -212,12 +220,20 @@ get_objects <- function(model){
   objects$constraints$rhs <- rhs
   
   # Variables
+  names(type)  <- var_names
+  names(value) <- var_names
+  names(lb)    <- var_names
+  names(ub)    <- var_names
+  
   objects$variables      <- list()
   objects$variables$type <- type
+  objects$variables$value<- value
   objects$variables$lb   <- lb
   objects$variables$ub   <- ub
   
   # Objective
+  names(obj)  <- var_names
+  
   objects$objective       <- list()
   objects$objective$obj   <- obj
   objects$objective$sense <- obj_sense
