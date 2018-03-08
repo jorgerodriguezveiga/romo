@@ -145,7 +145,6 @@ setMethod(
 #'
 #' @return mathematical model objects.
 #' @export
-#' @import plyr
 #'
 #' @examples
 get_objects <- function(model){

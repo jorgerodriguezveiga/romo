@@ -8,7 +8,6 @@
 #' 
 #' @return
 #' @export
-#' @import gurobi
 #'
 #' @examples
 Solve <- function(model, solver='gurobi', solver_options=list()){
@@ -33,7 +32,7 @@ Solve <- function(model, solver='gurobi', solver_options=list()){
     gurobi_model$obj        <- objects$objective$obj
     gurobi_model$modelsense <- objects$objective$sense
     
-    result <- gurobi(gurobi_model, solver_options)
+    result <- gurobi::gurobi(gurobi_model, solver_options)
     vars <- result$x
     solver_info = list(
       status=result$status,
