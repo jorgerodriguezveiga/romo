@@ -63,7 +63,7 @@ Solve <- function(model, solver='gurobi', solver_options=list()){
     
     # Change model in parent frame
     assign(nameObject, model, pos=parent.frame())
-    #invisible(NULL)
+
     return(solver_info)
   }
 }

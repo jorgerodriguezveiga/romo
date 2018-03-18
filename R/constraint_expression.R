@@ -204,6 +204,14 @@ setMethod(
 
 setMethod(
   "<=", 
+  signature(e1 = "VarElementClass", e2 = "VarElementClass"), 
+  function(e1, e2){
+    VarExpression() + e1 <= VarExpression() + e2
+  }
+)
+
+setMethod(
+  "<=", 
   signature(e1 = "VarExpressionClass", e2 = "AuxVarElementClass"), 
   function(e1, e2){
     e1 <= VarExpression() + e2
@@ -216,6 +224,22 @@ setMethod(
   signature(e1 = "AuxVarElementClass", e2 = "VarExpressionClass"), 
   function(e1, e2){
     VarExpression() + e1 <= e2
+  }
+)
+
+setMethod(
+  "<=", 
+  signature(e1 = "AuxVarElementClass", e2 = "ExpressionClass"), 
+  function(e1, e2){
+    VarExpression() + e1 <= VarExpression() + e2
+  }
+)
+
+setMethod(
+  "<=", 
+  signature(e1 = "ExpressionClass", e2 = "AuxVarElementClass"), 
+  function(e1, e2){
+    VarExpression() + e1 <= VarExpression() + e2
   }
 )
 

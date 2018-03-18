@@ -6,7 +6,8 @@ AuxVarElement <- function(name, expr, description=""){
   if(class(eval_expr)=="ExpressionClass"){
     eval_expr <- eval.parent(parse(text=eval_expr@expr), n=2)
   }
-  return(AuxVarElementClass(name=name, expr=eval_expr, description=description))
+  return(AuxVarElementClass(
+      name=name, expr=eval_expr, description=description))
 }
 # --------------------------------------------------------------------------- #
 
